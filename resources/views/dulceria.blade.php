@@ -349,6 +349,44 @@
     });
 
     document.addEventListener('DOMContentLoaded', renderCart);
+    
+        // ===============================
+    // 🎟️ AGREGAR ENTRADAS AUTOMÁTICAMENTE AL CARRITO
+    // ===============================
+    document.addEventListener('DOMContentLoaded', () => {
+        // Verificamos si hay entradas en la URL
+        const params = new URLSearchParams(window.location.search);
+        const entradasData = params.get('entradas');
+
+        if (entradasData) {
+            try {
+                const entradas = JSON.parse(decodeURIComponent(entradasData));
+
+                entradas.forEach(e => {
+                    fetch("{{ route('carrito.add') }}", {
+                        method: "POST",
+                        headers: {
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            name: e.nombre,
+                            price: e.precio,
+                            qty: e.cantidad
+                        }),
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) renderCart();
+                    })
+                    .catch(() => console.warn("⚠️ No se pudo agregar una entrada al carrito."));
+                });
+            } catch (err) {
+                console.error("Error al procesar las entradas:", err);
+            }
+        }
+    });
+
 </script>
 @endsection
 

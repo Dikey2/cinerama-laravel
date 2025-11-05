@@ -52,6 +52,8 @@ class Kernel extends HttpKernel
         // Middleware personalizado de administrador
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
     ];
+
+    
 }
 
 

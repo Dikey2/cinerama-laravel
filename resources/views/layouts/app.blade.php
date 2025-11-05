@@ -7,6 +7,8 @@
     <title>Cinerama 🎞️</title>
     @vite('resources/css/app.css')
 </head>
+<script src="//unpkg.com/alpinejs" defer></script>
+
 
 <body class="bg-black text-white font-sans">
 
@@ -96,6 +98,7 @@
     <footer class="bg-black border-t border-yellow-600 text-gray-400 text-center py-6 mt-10 text-sm">
         © {{ date('Y') }} Cinerama — Todos los derechos reservados 🍿
     </footer>
+
 
 </body>
 </html>

@@ -11,6 +11,8 @@ use App\Http\Controllers\{
     CandyController
 };
 
+use App\Http\Controllers\ReservaController;
+
 // 🏠 Página principal redirige a Próximos Estrenos
 Route::redirect('/', '/proximos-estrenos');
 
@@ -65,6 +67,20 @@ Route::view('/combos/dulces', 'combos.dulces')->name('combos.dulces');
 
 // 🥤 Complementos
 Route::view('/combos/complementos', 'combos.complementos')->name('combos.complementos');
+
+Route::get('/butacas', function () {
+    return view('butacas');
+})->name('butacas');
+
+
+Route::get('/entradas', function () {
+    return view('entradas');
+})->name('entradas');
+
+Route::post('/reservar-butacas', [ReservaController::class, 'reservar'])->name('reservas.reservar');
+Route::delete('/liberar-butacas', [ReservaController::class, 'liberar'])->name('reservas.liberar');
+Route::post('/confirmar-butacas', [ReservaController::class, 'confirmar'])->name('reservas.confirmar');
+
 
 
 // 🔸 Páginas individuales de Promociones
