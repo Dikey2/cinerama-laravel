@@ -5,7 +5,7 @@
     
     <!-- 🎉 Encabezado de éxito -->
     <div class="bg-gray-800 rounded-2xl shadow-2xl p-10 max-w-lg w-full border border-yellow-500">
-        <h1 class="text-4xl font-extrabold text-yellow-400 mb-4">
+        <h1 class="text-4xl font-extrabold text-yellow-400 mb-4">  
             🎉 ¡Pedido realizado con éxito!
         </h1>
 
@@ -16,7 +16,7 @@
 
         <!-- 🔢 Código del pedido -->
         <div class="bg-yellow-500 text-black text-2xl font-mono py-4 px-6 rounded-xl shadow-inner mb-8">
-            {{ $pedido->codigo ?? '—' }}
+            {{ $order->codigo ?? '—' }}
         </div>
 
         <!-- 📄 Mensaje adicional -->
@@ -37,5 +37,6 @@
     </p>
 </div>
 @endsection
+
 
 

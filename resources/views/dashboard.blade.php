@@ -8,7 +8,11 @@
         <!-- 🧑 Perfil -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 border-b border-yellow-400 pb-6">
             <div>
-                <h1 class="text-3xl font-extrabold text-yellow-400">👋 Bienvenido, {{ $user->name }}</h1>
+                <h1 class="text-3xl font-extrabold text-yellow-400">
+    👋 Bienvenido, {{ Auth::user()->name }}
+</h1>
+
+
                 <p class="text-gray-400 mt-2">Panel de control de tu cuenta Cinerama</p>
             </div>
 

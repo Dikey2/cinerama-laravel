@@ -10,6 +10,7 @@ use App\Algorithms\BinarySearchTree;
 
 class MovieController extends Controller
 {
+    // 🎬 Controlador principal de películas
     public function index(Request $request)
     {
         $query = Movie::query();
@@ -41,7 +42,7 @@ class MovieController extends Controller
 
         $genresTree = $tree->inOrderTraversal();
 
-        // ✅ Llamamos a la nueva vista de películas (no home)
+        // ✅ Vista principal de películas
         return view('peliculas', [
             'peliculas' => $sortedMovies,
             'genresTree' => $genresTree,
@@ -49,6 +50,11 @@ class MovieController extends Controller
             'search' => $request->get('search', ''),
         ]);
     }
+
+    // 🎥 NUEVA FUNCIÓN: Vista de Próximos Estrenos
+    public function proximos()
+    {
+        $movies = Movie::all(); // Obtiene todas las películas
+        return view('proximos', compact('movies'));
+    }
 }
-
-

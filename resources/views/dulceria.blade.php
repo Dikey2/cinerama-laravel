@@ -174,7 +174,7 @@
                 ${comboCard('Promo 3 - Pareja Deluxe', '1 Canchita Grande + 2 Bebidas + 1 KitKat', 'S/ 37.50', 'promo3.png')}
                 ${comboCard('Promo 4 - Family Pack', '2 Canchitas + 3 Bebidas + 2 Chocolates', 'S/ 59.90', 'promo4.png')}
                 ${comboCard('Promo 5 - Mega Movie Night', '1 Canchita Gigante + 3 Bebidas + 2 Snacks', 'S/ 64.90', 'promo5.png')}
-                ${comboCard('Promo 6 - Friends Combo', '3 Canchitas Medianas + 3 Bebidas + 3 Chocolatinas', 'S/ 79.00', 'promo6.png')}
+                ${comboCard('Promo 6 - Friends Combo', '3 Canchitas Medianas + 3 Bebidas + 3 Chocolatinas', 'S/ 79.00', 'promo6.jpeg')}
             </div>
         `,
         socio: `
@@ -182,7 +182,7 @@
             <div class='grid grid-cols-1 md:grid-cols-3 gap-6'>
                 ${comboCard('Combo Socio Clásico', '1 Canchita Gigante + 1 Bebida (32oz)', 'S/ 24.90', 'combo1.png')}
                 ${comboCard('Combo Dúo Socio', '1 Canchita + 2 Bebidas + M&Ms', 'S/ 34.50', 'combo2.png')}
-                ${comboCard('Combo Sweet & Pop', '1 Canchita + 1 Bebida + Chocolate Mood', 'S/ 28.90', 'combo3.png')}
+                ${comboCard('Combo Sweet & Pop', '1 Canchita + 1 Bebida + Chocolate ', 'S/ 28.90', 'combo3.png')}
                 ${comboCard('Combo CineFan', '2 Canchitas + 2 Bebidas', 'S/ 31.90', 'combo4.png')}
                 ${comboCard('Combo MoviePlus', '1 Canchita Gigante + 1 Bebida + Hotdog', 'S/ 33.90', 'combo5.png')}
                 ${comboCard('Combo Deluxe Socio', '2 Canchitas + 2 Bebidas + Nachos', 'S/ 39.90', 'combo6.png')}

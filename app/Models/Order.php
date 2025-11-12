@@ -9,13 +9,20 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_name', 'total'];
+    protected $fillable = [
+        'user_name',
+        'email',
+        'phone',
+        'total',
+        'codigo' // ✅ necesario para evitar el error
+    ];
 
     public function items()
     {
         return $this->hasMany(OrderItem::class);
     }
 }
+
 
 
 

@@ -24,17 +24,16 @@ class CartController extends Controller
 
     /** 🛒 Mostrar carrito */
     public function index()
-{
-    $cart = $this->cart();
-    $total = collect($cart)->sum(fn($i) => $i['price'] * $i['qty']);
+    {
+        $cart = $this->cart();
+        $total = collect($cart)->sum(fn($i) => $i['price'] * $i['qty']);
 
-    if (request()->ajax()) {
-        return view('carrito.index', compact('cart', 'total'))->render();
+        if (request()->ajax()) {
+            return view('carrito.index', compact('cart', 'total'))->render();
+        }
+
+        return view('carrito.index', compact('cart', 'total'));
     }
-
-    return view('carrito.index', compact('cart', 'total'));
-}
-
 
     /** ➕ Agregar producto al carrito (desde fetch o formulario) */
     public function add(Request $request)
@@ -140,34 +139,48 @@ class CartController extends Controller
             'telefono_cliente' => 'nullable|string|max:20',
         ]);
 
-        // Calcular total
+        // 🧮 Calcular total
         $total = collect($cart)->sum(fn($i) => $i['price'] * $i['qty']);
 
-        // Crear pedido principal
+        // 🎫 Generar código único del pedido
+        $codigo = 'CIN-' . strtoupper(substr(uniqid(), -6)); // Ejemplo: CIN-A1B2C3
+
+        // 💾 Crear pedido principal
         $order = Order::create([
             'user_name' => $request->nombre_cliente,
             'email'     => $request->correo_cliente,
             'phone'     => $request->telefono_cliente,
             'total'     => $total,
+            'codigo'    => $codigo,
         ]);
 
         // Registrar ítems del pedido
         foreach ($cart as $item) {
             $order->items()->create([
-                'name'     => $item['name'],
-                'price'    => $item['price'],
-                'quantity' => $item['qty'],
+                'product_name' => $item['name'],
+                'price'        => $item['price'],
+                'quantity'     => $item['qty'],
+                'order_id'     => $order->id,
             ]);
         }
 
         // Vaciar carrito tras registrar pedido
         Session::forget('cart');
 
-        // Redirigir a página de éxito
+        // Redirigir a página de éxito con el código del pedido
         return redirect()
-            ->route('carrito.exito', ['codigo' => $order->id])
+            ->route('carrito.exito', ['codigo' => $order->codigo])
             ->with('success', 'Pedido realizado correctamente 🎉');
     }
+
+    /** 🎉 Página de éxito */
+    public function exito($codigo)
+    {
+        $order = Order::where('codigo', $codigo)->first();
+        return view('carrito.exito', compact('order'));
+    }
 }
+
+
 
 

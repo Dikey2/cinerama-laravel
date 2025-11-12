@@ -9,7 +9,25 @@ class Movie extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'description', 'poster', 'release_date', 'genre'];
-    protected $casts = ['release_date' => 'date'];
+    protected $fillable = [
+        'title',
+        'description',
+        'poster',
+        'image',
+        'release_date',
+        'genre',
+        'duration',
+        'classification',
+        'format',
+        'language',
+        'city',
+        'synopsis',
+        'schedules',
+        'trailer_url'
+    ];
+
+protected $casts = [
+    'schedules' => 'array',
+];
 
 }

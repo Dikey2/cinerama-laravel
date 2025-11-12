@@ -29,14 +29,13 @@
             </div>
         </div>
 
-        <!-- ✅ Mensaje de éxito -->
+        <!-- ✅ Mensajes -->
         @if(session('success'))
             <div class="bg-green-100 border-l-4 border-green-600 text-green-800 p-3 rounded mb-6">
                 {{ session('success') }}
             </div>
         @endif
 
-        <!-- ⚠️ Mensaje de error -->
         @if(session('error'))
             <div class="bg-red-100 border-l-4 border-red-600 text-red-800 p-3 rounded mb-6">
                 {{ session('error') }}
@@ -52,7 +51,6 @@
                     ← Ir a la Dulcería
                 </a>
             </div>
-
         @else
             <!-- 🧾 Tabla del carrito -->
             <div class="overflow-x-auto bg-white rounded-xl shadow-lg mb-8">
@@ -69,20 +67,15 @@
                     <tbody>
                         @foreach($cart as $key => $item)
                         <tr class="border-b hover:bg-gray-50">
-                            <!-- 🧁 Nombre e imagen -->
                             <td class="p-3 flex items-center gap-3">
                                 <img src="{{ $item['image'] ?? asset('images/no-image.png') }}" 
                                      alt="{{ $item['name'] }}"
                                      class="w-16 h-16 rounded-lg object-cover">
                                 <span class="font-semibold text-gray-700">{{ $item['name'] }}</span>
                             </td>
-
-                            <!-- 💰 Precio -->
                             <td class="p-3 text-right font-medium">
                                 S/ {{ number_format($item['price'], 2) }}
                             </td>
-
-                            <!-- 🔢 Cantidad -->
                             <td class="p-3 text-center">
                                 <form action="{{ route('carrito.update') }}" method="POST" class="inline-flex items-center gap-2">
                                     @csrf
@@ -96,13 +89,9 @@
                                     </button>
                                 </form>
                             </td>
-
-                            <!-- 💸 Subtotal -->
                             <td class="p-3 text-center text-yellow-600 font-semibold">
                                 S/ {{ number_format($item['price'] * $item['qty'], 2) }}
                             </td>
-
-                            <!-- ❌ Eliminar -->
                             <td class="p-3 text-center">
                                 <form action="{{ route('carrito.remove') }}" method="POST" class="inline">
                                     @csrf
@@ -129,7 +118,7 @@
                     <span class="font-bold text-yellow-600">S/ {{ number_format($total, 2) }}</span>
                 </div>
 
-                <!-- 🧾 Formulario de confirmación de pedido -->
+                <!-- 🧾 Formulario de confirmación -->
                 <form action="{{ route('carrito.checkout') }}" method="POST" class="space-y-4 mt-6">
                     @csrf
                     <div>
@@ -145,6 +134,32 @@
                                class="w-full rounded-lg border-gray-300 p-2 focus:ring-2 focus:ring-yellow-400">
                     </div>
 
+                    <!-- 💳 Métodos de pago -->
+                    <div class="mt-4">
+                        <label class="block text-gray-700 font-semibold mb-2">Método de pago:</label>
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <label class="flex items-center gap-2 bg-gray-100 border rounded-lg p-3 cursor-pointer hover:bg-gray-200 transition">
+                                <input type="radio" name="metodo_pago" value="tarjeta" required onchange="mostrarQR('none')">
+                                💳 Tarjeta de crédito / débito
+                            </label>
+                            <label class="flex items-center gap-2 bg-gray-100 border rounded-lg p-3 cursor-pointer hover:bg-gray-200 transition">
+                                <input type="radio" name="metodo_pago" value="yape" onchange="mostrarQR('yape')">
+                                📱 Yape
+                            </label>
+                            <label class="flex items-center gap-2 bg-gray-100 border rounded-lg p-3 cursor-pointer hover:bg-gray-200 transition">
+                                <input type="radio" name="metodo_pago" value="plin" onchange="mostrarQR('plin')">
+                                💸 Plin
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 🖼️ Sección de QR dinámico -->
+                    <div id="qrPago" class="hidden mt-6 text-center">
+                        <p class="text-gray-700 mb-2 font-semibold">Escanea el QR para completar tu pago:</p>
+                        <img id="qrImage" src="" alt="QR de pago" class="mx-auto w-56 h-56 rounded-lg shadow">
+                        <p class="text-gray-600 text-sm mt-2">Luego de realizar el pago, presiona "Confirmar pedido".</p>
+                    </div>
+
                     <button type="submit"
                         class="mt-3 w-full py-3 rounded-full bg-yellow-500 text-black font-semibold hover:bg-yellow-400 transition">
                         Confirmar pedido 🧾
@@ -158,8 +173,80 @@
         @endif
     </div>
 </div>
+
+<!-- 🧠 Script para mostrar QR -->
+<script>
+function mostrarQR(tipo) {
+    const qrDiv = document.getElementById('qrPago');
+    const qrImg = document.getElementById('qrImage');
+
+    if (tipo === 'none') {
+        qrDiv.classList.add('hidden');
+        return;
+    }
+
+    let src = '';
+    if (tipo === 'yape') {
+        src = '{{ asset("images/qr-yape.png") }}';
+    } else if (tipo === 'plin') {
+        src = '{{ asset("images/qr-plin.png") }}';
+    }
+
+    qrImg.src = src;
+    qrDiv.classList.remove('hidden');
+}
+</script>
+
+<!-- 🔧 Estilos para inputs + enfoque elegante -->
+<style>
+    /* 🔓 Desbloqueo */
+    input[type="text"],
+    input[type="email"],
+    input[type="number"] {
+        pointer-events: auto !important;
+        background-color: white !important;
+        position: relative !important;
+        z-index: 20 !important;
+    }
+
+    form {
+        position: relative;
+        z-index: 10;
+    }
+
+    .max-w-6xl {
+        position: relative;
+        z-index: 5;
+    }
+
+    /* 🎨 Estilo base de los inputs */
+    input[type="text"],
+    input[type="email"],
+    input[type="number"] {
+        color: #222 !important;
+        border: 2px solid #ccc !important;
+        border-radius: 8px;
+        background-color: #fff !important;
+        transition: all 0.3s ease-in-out;
+    }
+
+    /* ✨ Efecto cuando el usuario escribe o enfoca el campo */
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="number"]:focus {
+        border-color: #facc15 !important; /* Amarillo dorado */
+        box-shadow: 0 0 8px rgba(250, 204, 21, 0.6) !important;
+        outline: none !important;
+    }
+
+    /* 🔹 Placeholder visible y elegante */
+    input::placeholder {
+        color: #888 !important;
+    }
+</style>
 @endsection
-    
+
+
 
 
 
