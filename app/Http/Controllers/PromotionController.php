@@ -8,65 +8,86 @@ use Illuminate\Http\Request;
 class PromotionController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * ⭐ PÁGINA PÚBLICA – Mostrar todas las promociones al usuario normal
+     */
+    public function publicIndex()
+    {
+        $promociones = Promotion::all();
+        return view('promociones.index', compact('promociones'));
+    }
+
+    /**
+     * ⭐ ADMIN – Listado de promociones
      */
     public function index()
     {
         $items = Promotion::latest()->paginate(10);
-        return view('admin.promotions.index', compact('items'));
+        return view('admin.promociones.index', compact('items'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * ⭐ ADMIN – Formulario para crear nueva promoción
      */
     public function create()
     {
-        return view('admin.promotions.create');
+        return view('admin.promociones.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * ⭐ ADMIN – Guardar promoción nueva
      */
-    public function store(Request $r)
+    public function store(Request $request)
     {
-        $r->validate(['title' => 'required']);
-        Promotion::create($r->only('title', 'image', 'discount_text', 'valid_until'));
-        return redirect()->route('admin.promotions.index')->with('success', 'Promoción creada');
+        $data = $request->validate([
+            'titulo'      => 'required|string',
+            'descripcion' => 'nullable|string',
+            'estado'      => 'required|string',
+        ]);
+
+        Promotion::create($data);
+
+        return redirect()
+            ->route('admin.promociones.index')
+            ->with('success', 'Promoción creada correctamente');
     }
 
     /**
-     * Display the specified resource.
+     * ⭐ ADMIN – Editar promoción
      */
-    public function show(Promotion $promotion)
+    public function edit(Promotion $promocione)
     {
-        //
+        return view('admin.promociones.edit', compact('promocione'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * ⭐ ADMIN – Actualizar promoción existente
      */
-    public function edit(Promotion $promotion)
+    public function update(Request $request, Promotion $promocione)
     {
-        return view('admin.promotions.edit', compact('promotion'));
+        $data = $request->validate([
+            'titulo'      => 'required|string',
+            'descripcion' => 'nullable|string',
+            'estado'      => 'required|string',
+        ]);
+
+        $promocione->update($data);
+
+        return redirect()
+            ->route('admin.promociones.index')
+            ->with('success', 'Promoción actualizada');
     }
 
     /**
-     * Update the specified resource in storage.
+     * ⭐ ADMIN – Eliminar promoción
      */
-    public function update(Request $r, Promotion $promotion)
+    public function destroy(Promotion $promocione)
     {
-        $r->validate(['title' => 'required']);
-        $promotion->update($r->only('title', 'image', 'discount_text', 'valid_until'));
-        return redirect()->route('admin.promotions.index')->with('success', 'Promoción actualizada');
-    }
+        $promocione->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Promotion $promotion)
-    {
-        $promotion->delete();
-        return back()->with('success', 'Promoción eliminada');
+        return redirect()
+            ->route('admin.promociones.index')
+            ->with('success', 'Promoción eliminada correctamente');
     }
 }
+
 

@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use App\Providers\RouteServiceProvider;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -23,13 +24,22 @@ class AuthenticatedSessionController extends Controller
      * Handle an incoming authentication request.
      */
     public function store(LoginRequest $request): RedirectResponse
-    {
-        $request->authenticate();
+{
+    $request->authenticate();
+    $request->session()->regenerate();
 
-        $request->session()->regenerate();
+    // 🔥 Si el usuario venía del flujo de compra de butacas
+    if (session()->has('reserva.showtime')) {
+        $showtimeId = session('reserva.showtime');
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->route('asientos.entradas', $showtimeId);
     }
+
+    // Si venía de una URL previa → redirect intended
+    return redirect()->intended(RouteServiceProvider::HOME);
+}
+
+
 
     /**
      * Destroy an authenticated session.

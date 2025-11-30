@@ -45,7 +45,7 @@
         <!-- 🧺 Carrito vacío -->
         @if(!count($cart))
             <div class="bg-white rounded-xl shadow p-10 text-center">
-                <p class="text-gray-600 text-lg mb-4">Tu carrito está vacío 😅</p>
+                <p class="cart-empty text-gray-600 text-lg mb-4">Tu carrito está vacío 😅</p>
                 <a href="{{ route('dulceria') }}" 
                    class="mt-2 inline-block bg-yellow-500 text-black px-6 py-2 rounded-full font-semibold hover:bg-yellow-400 transition">
                     ← Ir a la Dulcería
@@ -81,8 +81,15 @@
                                     @csrf
                                     @method('PATCH')
                                     <input type="hidden" name="key" value="{{ $key }}">
-                                    <input type="number" name="qty" value="{{ $item['qty'] }}" min="1"
-                                           class="w-20 text-center border border-gray-300 rounded-lg">
+                                    <input 
+    type="number"
+    name="qty"
+    value="{{ $item['qty'] }}"
+    min="1"
+    class="w-20 text-center border border-gray-300 rounded-lg 
+           bg-white text-gray-800 focus:ring-2 focus:ring-yellow-400"
+/>
+
                                     <button type="submit" 
                                             class="px-3 py-1 rounded bg-yellow-500 text-black hover:bg-yellow-400 transition">
                                         🔄
@@ -119,52 +126,118 @@
                 </div>
 
                 <!-- 🧾 Formulario de confirmación -->
-                <form action="{{ route('carrito.checkout') }}" method="POST" class="space-y-4 mt-6">
-                    @csrf
-                    <div>
-                        <input type="text" name="nombre_cliente" placeholder="Nombre completo"
-                               class="w-full rounded-lg border-gray-300 p-2 focus:ring-2 focus:ring-yellow-400" required>
-                    </div>
-                    <div>
-                        <input type="email" name="correo_cliente" placeholder="Correo electrónico"
-                               class="w-full rounded-lg border-gray-300 p-2 focus:ring-2 focus:ring-yellow-400">
-                    </div>
-                    <div>
-                        <input type="text" name="telefono_cliente" placeholder="Teléfono"
-                               class="w-full rounded-lg border-gray-300 p-2 focus:ring-2 focus:ring-yellow-400">
-                    </div>
+<form action="{{ route('pedido.confirmar') }}" method="POST" class="space-y-4 mt-6">
 
-                    <!-- 💳 Métodos de pago -->
-                    <div class="mt-4">
-                        <label class="block text-gray-700 font-semibold mb-2">Método de pago:</label>
-                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                            <label class="flex items-center gap-2 bg-gray-100 border rounded-lg p-3 cursor-pointer hover:bg-gray-200 transition">
-                                <input type="radio" name="metodo_pago" value="tarjeta" required onchange="mostrarQR('none')">
-                                💳 Tarjeta de crédito / débito
-                            </label>
-                            <label class="flex items-center gap-2 bg-gray-100 border rounded-lg p-3 cursor-pointer hover:bg-gray-200 transition">
-                                <input type="radio" name="metodo_pago" value="yape" onchange="mostrarQR('yape')">
-                                📱 Yape
-                            </label>
-                            <label class="flex items-center gap-2 bg-gray-100 border rounded-lg p-3 cursor-pointer hover:bg-gray-200 transition">
-                                <input type="radio" name="metodo_pago" value="plin" onchange="mostrarQR('plin')">
-                                💸 Plin
-                            </label>
-                        </div>
-                    </div>
+    @csrf
 
-                    <!-- 🖼️ Sección de QR dinámico -->
-                    <div id="qrPago" class="hidden mt-6 text-center">
-                        <p class="text-gray-700 mb-2 font-semibold">Escanea el QR para completar tu pago:</p>
-                        <img id="qrImage" src="" alt="QR de pago" class="mx-auto w-56 h-56 rounded-lg shadow">
-                        <p class="text-gray-600 text-sm mt-2">Luego de realizar el pago, presiona "Confirmar pedido".</p>
-                    </div>
+    <div>
+        <input type="text" name="nombre_cliente" placeholder="Nombre completo"
+               class="w-full rounded-lg border-gray-300 p-2 focus:ring-2 focus:ring-yellow-400" required>
+    </div>
 
-                    <button type="submit"
-                        class="mt-3 w-full py-3 rounded-full bg-yellow-500 text-black font-semibold hover:bg-yellow-400 transition">
-                        Confirmar pedido 🧾
-                    </button>
-                </form>
+    <div>
+        <input type="email" name="correo_cliente" placeholder="Correo electrónico"
+               class="w-full rounded-lg border-gray-300 p-2 focus:ring-2 focus:ring-yellow-400">
+    </div>
+
+    <div>
+        <input type="text" name="telefono_cliente" placeholder="Teléfono"
+               class="w-full rounded-lg border-gray-300 p-2 focus:ring-2 focus:ring-yellow-400">
+    </div>
+
+    <!-- 💳 Métodos de pago -->
+    <div class="mt-4">
+        <label class="block text-gray-700 font-semibold mb-2">Método de pago:</label>
+
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+
+            <!-- TARJETA -->
+            <label class="flex items-center gap-2 bg-gray-100 border rounded-lg p-3 cursor-pointer hover:bg-gray-200 transition">
+                <input type="radio" name="metodo_pago" value="tarjeta" required onclick="mostrarTarjeta()">
+                💳 Tarjeta de crédito / débito
+            </label>
+
+            <!-- YAPE -->
+            <label class="flex items-center gap-2 bg-gray-100 border rounded-lg p-3 cursor-pointer hover:bg-gray-200 transition">
+                <input type="radio" name="metodo_pago" value="yape" onclick="mostrarQR('yape')">
+                📱 Yape
+            </label>
+
+            <!-- PLIN -->
+            <label class="flex items-center gap-2 bg-gray-100 border rounded-lg p-3 cursor-pointer hover:bg-gray-200 transition">
+                <input type="radio" name="metodo_pago" value="plin" onclick="mostrarQR('plin')">
+                💸 Plin
+            </label>
+        </div>
+    </div>
+
+    <!-- 🖼️ FORMULARIO DE TARJETA (OCULTO) -->
+    <div id="tarjetaForm" class="hidden mt-6 bg-white border rounded-xl p-6 shadow-lg max-w-md mx-auto">
+
+    <h3 class="text-lg font-bold text-gray-800 mb-4">Datos de tu tarjeta</h3>
+
+    <div class="space-y-4">
+
+        <!-- Número de tarjeta -->
+        <div class="flex flex-col">
+            <label class="text-gray-600 text-sm font-semibold mb-1">Número de tarjeta</label>
+            <input type="text" maxlength="19"
+                   class="rounded-lg border-gray-300 p-3 text-lg tracking-widest focus:ring-2 focus:ring-yellow-400"
+                   placeholder="1234 5678 9012 3456">
+        </div>
+
+        <!-- Nombre del titular -->
+        <div class="flex flex-col">
+            <label class="text-gray-600 text-sm font-semibold mb-1">Nombre del titular</label>
+            <input type="text"
+                   class="rounded-lg border-gray-300 p-3 focus:ring-2 focus:ring-yellow-400"
+                   placeholder="Como aparece en la tarjeta">
+        </div>
+
+        <!-- Fecha y CVV -->
+        <div class="grid grid-cols-2 gap-4">
+
+            <div class="flex flex-col">
+                <label class="text-gray-600 text-sm font-semibold mb-1">Expira</label>
+                <input type="text" maxlength="5"
+                       class="rounded-lg border-gray-300 p-3 focus:ring-2 focus:ring-yellow-400"
+                       placeholder="MM/AA">
+            </div>
+
+            <div class="flex flex-col">
+                <label class="text-gray-600 text-sm font-semibold mb-1">CVV</label>
+                <input type="text" maxlength="4"
+                       class="rounded-lg border-gray-300 p-3 focus:ring-2 focus:ring-yellow-400"
+                       placeholder="***">
+            </div>
+
+        </div>
+
+        <!-- Logos de tarjetas -->
+        <div class="flex items-center justify-end gap-3 opacity-70 mt-2">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" class="h-6">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" class="h-6">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/3/30/American_Express_logo_%282018%29.svg" class="h-6">
+        </div>
+
+    </div>
+</div>  
+
+    <!-- 🖼️ SECCIÓN QR -->
+    <div id="qrPago" class="hidden mt-6 text-center">
+        <p class="text-gray-700 mb-2 font-semibold">Escanea el QR para completar tu pago:</p>
+        <img id="qrImage" src="" alt="QR de pago" class="mx-auto w-56 h-56 rounded-lg shadow">
+        <p class="text-gray-600 text-sm mt-2">Luego de pagar, presiona "Confirmar pedido".</p>
+    </div>
+
+    <!-- BOTÓN -->
+    <button type="submit"
+            class="mt-3 w-full py-3 rounded-full bg-yellow-500 text-black font-semibold hover:bg-yellow-400 transition">
+        Confirmar pedido 🧾
+    </button>
+</form>
+
+            
 
                 <p class="text-xs text-gray-500 mt-3 text-center">
                     * Al confirmar, tu pedido será registrado y el carrito se vaciará automáticamente.
@@ -176,75 +249,40 @@
 
 <!-- 🧠 Script para mostrar QR -->
 <script>
+function mostrarTarjeta() {
+    const tarjeta = document.getElementById('tarjetaForm');
+    const qr = document.getElementById('qrPago');
+
+    // Mostrar tarjeta
+    tarjeta.classList.remove('hidden');
+
+    // Ocultar QR
+    qr.classList.add('hidden');
+}
+
 function mostrarQR(tipo) {
-    const qrDiv = document.getElementById('qrPago');
-    const qrImg = document.getElementById('qrImage');
+    const tarjeta = document.getElementById('tarjetaForm');
+    const qr = document.getElementById('qrPago');
+    const img = document.getElementById('qrImage');
 
-    if (tipo === 'none') {
-        qrDiv.classList.add('hidden');
-        return;
-    }
+    // Ocultar tarjeta
+    tarjeta.classList.add('hidden');
 
-    let src = '';
+    // Mostrar QR
+    qr.classList.remove('hidden');
+
+    // Elegir QR según método
     if (tipo === 'yape') {
-        src = '{{ asset("images/qr-yape.png") }}';
+        img.src = '{{ asset("images/qr-yape.jpeg") }}';
     } else if (tipo === 'plin') {
-        src = '{{ asset("images/qr-plin.png") }}';
+        img.src = '{{ asset("images/qr-plin.jpeg") }}';
     }
-
-    qrImg.src = src;
-    qrDiv.classList.remove('hidden');
 }
 </script>
 
-<!-- 🔧 Estilos para inputs + enfoque elegante -->
-<style>
-    /* 🔓 Desbloqueo */
-    input[type="text"],
-    input[type="email"],
-    input[type="number"] {
-        pointer-events: auto !important;
-        background-color: white !important;
-        position: relative !important;
-        z-index: 20 !important;
-    }
 
-    form {
-        position: relative;
-        z-index: 10;
-    }
-
-    .max-w-6xl {
-        position: relative;
-        z-index: 5;
-    }
-
-    /* 🎨 Estilo base de los inputs */
-    input[type="text"],
-    input[type="email"],
-    input[type="number"] {
-        color: #222 !important;
-        border: 2px solid #ccc !important;
-        border-radius: 8px;
-        background-color: #fff !important;
-        transition: all 0.3s ease-in-out;
-    }
-
-    /* ✨ Efecto cuando el usuario escribe o enfoca el campo */
-    input[type="text"]:focus,
-    input[type="email"]:focus,
-    input[type="number"]:focus {
-        border-color: #facc15 !important; /* Amarillo dorado */
-        box-shadow: 0 0 8px rgba(250, 204, 21, 0.6) !important;
-        outline: none !important;
-    }
-
-    /* 🔹 Placeholder visible y elegante */
-    input::placeholder {
-        color: #888 !important;
-    }
-</style>
 @endsection
+
 
 
 

@@ -19,18 +19,20 @@ class RedirectIfAuthenticated
             if (Auth::guard($guard)->check()) {
                 $user = Auth::user();
 
-                // 👇 Redirige a dashboard o admin según el rol
+                // 👇 Redirige a admin si es administrador
                 if ($user->is_admin) {
                     return redirect('/admin/movies');
-                } else {
-                    return redirect('/dashboard');
-                }
+                } 
+                
+                // 👇 Redirige al HOME real del usuario normal
+                return redirect('/');
             }
         }
 
         return $next($request);
     }
 }
+
 
 
 

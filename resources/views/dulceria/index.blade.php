@@ -1,104 +1,107 @@
-@extends('layouts.app')
+    @extends('layouts.app')
 
-@section('content')
-<div class="bg-black text-white min-h-screen">
+    @section('content')
+    <div class="bg-black text-white min-h-screen">
 
-    <!-- 🏙️ Banner -->
-    <div class="relative w-full">
-        <img src="{{ asset('images/promociones/portada.png') }}" class="w-full h-96 object-cover opacity-70">
-        <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
-            <h1 class="text-4xl font-extrabold text-yellow-400 mb-3">🍿 Dulcería Cinerama</h1>
-            <p class="text-gray-300 text-lg">Escoge tu cine favorito y disfruta de nuestros productos</p>
-        </div>
-    </div>
-
-    <!-- 🎦 Selector de cine -->
-    <div id="selectorCine" class="max-w-4xl mx-auto text-center py-10">
-        <h2 class="text-2xl font-bold text-yellow-400 mb-6">
-            Escoge un Cinerama para comprar productos de nuestra dulcería
-        </h2>
-
-        <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-8">
-            <select id="citySelect" class="bg-gray-800 text-white px-5 py-3 rounded-lg w-64 focus:ring-2 focus:ring-yellow-400">
-                <option value="">Selecciona una ciudad</option>
-                <option value="arequipa">Arequipa</option>
-                <option value="lima">Lima</option>
-            </select>
-
-            <select id="cinemaSelect" class="bg-gray-800 text-white px-5 py-3 rounded-lg w-64 focus:ring-2 focus:ring-yellow-400" disabled>
-                <option value="">Selecciona un cine</option>
-            </select>
+        <!-- 🏙️ Banner -->
+        <div class="relative w-full">
+            <img src="{{ asset('images/promociones/portada.png') }}" class="w-full h-96 object-cover opacity-70">
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+                <h1 class="text-4xl font-extrabold text-yellow-400 mb-3">🍿 Dulcería Cinerama</h1>
+                <p class="text-gray-300 text-lg">Escoge tu cine favorito y disfruta de nuestros productos</p>
+            </div>
         </div>
 
-        <button id="continueBtn" class="bg-yellow-500 text-black px-8 py-3 rounded-full font-semibold hover:bg-yellow-400 transition" disabled>
-            Continuar →
-        </button>
-    </div>
+        <!-- 🎦 Selector de cine -->
+        <div id="selectorCine" class="max-w-4xl mx-auto text-center py-10">
+            <h2 class="text-2xl font-bold text-yellow-400 mb-6">
+                Escoge un Cinerama para comprar productos de nuestra dulcería
+            </h2>
 
-    <!-- 🍫 Sección de productos -->
-    <div id="dulceriaProductos" class="hidden bg-gray-100 text-black min-h-screen">
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-8">
+                <select id="citySelect" class="bg-gray-800 text-white px-5 py-3 rounded-lg w-64 focus:ring-2 focus:ring-yellow-400">
+                    <option value="">Selecciona una ciudad</option>
+                    <option value="arequipa">Arequipa</option>
+                    <option value="lima">Lima</option>
+                </select>
 
-        <div class="text-center my-6">
-            <button id="volverBtn"
-                class="px-8 py-3 text-yellow-400 border-2 border-yellow-400 rounded-full 
-                       font-semibold hover:bg-yellow-400 hover:text-black transition duration-300 
-                       shadow-[0_0_10px_rgba(255,215,0,0.6)] hover:shadow-[0_0_20px_rgba(255,215,0,0.9)]">
-                ← Cambiar de cine
+                <select id="cinemaSelect" class="bg-gray-800 text-white px-5 py-3 rounded-lg w-64 focus:ring-2 focus:ring-yellow-400" disabled>
+                    <option value="">Selecciona un cine</option>
+                </select>
+            </div>
+
+            <button id="continueBtn" class="bg-yellow-500 text-black px-8 py-3 rounded-full font-semibold hover:bg-yellow-400 transition" disabled>
+                Continuar →
             </button>
         </div>
 
-        <!-- Categorías -->
-        <div class="flex flex-wrap justify-center gap-4 py-6 bg-gray-200 shadow-inner">
-            <button onclick="mostrarSeccion('promos')" class="categoria-btn bg-white text-black px-5 py-2 rounded-lg shadow hover:bg-yellow-400 transition">🎁 Promos Dulceras</button>
-            <button onclick="mostrarSeccion('socio')" class="categoria-btn bg-white text-black px-5 py-2 rounded-lg shadow hover:bg-yellow-400 transition">💳 Combos Socio</button>
-            <button onclick="mostrarSeccion('unoDos')" class="categoria-btn bg-white text-black px-5 py-2 rounded-lg shadow hover:bg-yellow-400 transition">🎬 Combos 1 o 2</button>
-            <button onclick="mostrarSeccion('canchitas')" class="categoria-btn bg-white text-black px-5 py-2 rounded-lg shadow hover:bg-yellow-400 transition">🍿 Canchitas</button>
-            <button onclick="mostrarSeccion('dulces')" class="categoria-btn bg-white text-black px-5 py-2 rounded-lg shadow hover:bg-yellow-400 transition">🍫 Dulces</button>
-            <button onclick="mostrarSeccion('complementos')" class="categoria-btn bg-white text-black px-5 py-2 rounded-lg shadow hover:bg-yellow-400 transition">🥤 Complementos</button>
+        <!-- 🍫 Sección de productos -->
+        <div id="dulceriaProductos" class="hidden bg-gray-100 text-black min-h-screen">
+
+            <div class="text-center my-6">
+                <button id="volverBtn"
+                    class="px-8 py-3 text-yellow-400 border-2 border-yellow-400 rounded-full 
+                        font-semibold hover:bg-yellow-400 hover:text-black transition duration-300 
+                        shadow-[0_0_10px_rgba(255,215,0,0.6)] hover:shadow-[0_0_20px_rgba(255,215,0,0.9)]">
+                    ← Cambiar de cine
+                </button>
+            </div>
+
+            <!-- Categorías -->
+            <div class="flex flex-wrap justify-center gap-4 py-6 bg-gray-200 shadow-inner">
+                <button onclick="mostrarSeccion('promos')" class="categoria-btn bg-white text-black px-5 py-2 rounded-lg shadow hover:bg-yellow-400 transition">🎁 Promos Dulceras</button>
+                @auth
+                <button onclick="mostrarSeccion('socio')" 
+                class="categoria-btn bg-white text-black px-5 py-2 rounded-lg shadow hover:bg-yellow-400 transition">
+                💳 Combos Socio
+                </button>
+                @endauth
+
+                <button onclick="mostrarSeccion('unoDos')" class="categoria-btn bg-white text-black px-5 py-2 rounded-lg shadow hover:bg-yellow-400 transition">🎬 Combos 1 o 2</button>
+                <button onclick="mostrarSeccion('canchitas')" class="categoria-btn bg-white text-black px-5 py-2 rounded-lg shadow hover:bg-yellow-400 transition">🍿 Canchitas</button>
+                <button onclick="mostrarSeccion('dulces')" class="categoria-btn bg-white text-black px-5 py-2 rounded-lg shadow hover:bg-yellow-400 transition">🍫 Dulces</button>
+                <button onclick="mostrarSeccion('complementos')" class="categoria-btn bg-white text-black px-5 py-2 rounded-lg shadow hover:bg-yellow-400 transition">🥤 Complementos</button>
+            </div>
+
+            <div id="contenido" class="max-w-6xl mx-auto p-6 text-center">
+                <p class="text-gray-600">Selecciona una categoría para ver los productos disponibles.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🧺 CARRITO LATERAL MEJORADO -->
+    <div id="sideCart"
+        class="fixed top-0 left-0 h-full w-96 bg-gray-900 text-white shadow-2xl transform -translate-x-full transition-transform duration-300 z-50 overflow-y-auto">
+        
+        <div class="flex justify-between items-center p-4 border-b border-gray-700">
+            <h2 class="text-xl font-bold text-yellow-400">🛒 Tu Carrito</h2>
+            <button id="closeCart" class="text-gray-400 hover:text-white text-2xl">&times;</button>
         </div>
 
-        <div id="contenido" class="max-w-6xl mx-auto p-6 text-center">
-            <p class="text-gray-600">Selecciona una categoría para ver los productos disponibles.</p>
+        <div id="cartContent" class="p-4 space-y-3">
+            <p class="text-gray-400">Tu carrito está vacío 😅</p>
+        </div>  
+
+        <div class="p-4 border-t border-gray-700 bg-gray-800">
+            <div class="flex justify-between text-lg mb-3">
+                <span>Total:</span>
+                <span id="cartTotal" class="font-bold text-yellow-400">S/ 0.00</span>
+            </div>
+            <button id="checkoutBtn"
+                class="w-full py-3 rounded-full bg-yellow-500 text-black font-semibold hover:bg-yellow-400 transition disabled:opacity-50"
+                disabled>
+                Confirmar pedido 🧾
+            </button>
         </div>
     </div>
-</div>
 
-<!-- 🧺 CARRITO LATERAL MEJORADO -->
-<div id="sideCart"
-    class="fixed top-0 left-0 h-full w-96 bg-gray-900 text-white shadow-2xl transform -translate-x-full transition-transform duration-300 z-50 overflow-y-auto">
-    
-    <!-- Header -->
-    <div class="flex justify-between items-center p-4 border-b border-gray-700">
-        <h2 class="text-xl font-bold text-yellow-400">🛒 Tu Carrito</h2>
-        <button id="closeCart" class="text-gray-400 hover:text-white text-2xl">&times;</button>
-    </div>
+    <button id="toggleCart"
+        class="fixed bottom-6 left-6 bg-yellow-500 hover:bg-yellow-400 text-black font-bold px-5 py-3 rounded-full shadow-lg z-50">
+        🛒 Ver carrito
+    </button>
 
-    <!-- Contenido -->
-    <div id="cartContent" class="p-4 space-y-3">
-        <p class="text-gray-400">Tu carrito está vacío 😅</p>
-    </div>
+    <script>
 
-    <!-- Footer -->
-    <div class="p-4 border-t border-gray-700 bg-gray-800">
-        <div class="flex justify-between text-lg mb-3">
-            <span>Total:</span>
-            <span id="cartTotal" class="font-bold text-yellow-400">S/ 0.00</span>
-        </div>
-        <button id="checkoutBtn"
-            class="w-full py-3 rounded-full bg-yellow-500 text-black font-semibold hover:bg-yellow-400 transition disabled:opacity-50"
-            disabled>
-            Confirmar pedido 🧾
-        </button>
-    </div>
-</div>
-
-<!-- 🔘 BOTÓN FLOTANTE -->
-<button id="toggleCart"
-    class="fixed bottom-6 left-6 bg-yellow-500 hover:bg-yellow-400 text-black font-bold px-5 py-3 rounded-full shadow-lg z-50">
-    🛒 Ver carrito
-</button>
-
-<script>
     // ===============================
     // 🎦 Selección de cine
     // ===============================
@@ -148,7 +151,7 @@
     });
 
     // ===============================
-    // 🍿 PRODUCTOS DINÁMICOS
+    // PRODUCTOS DINÁMICOS
     // ===============================
     function comboCard(nombre, descripcion, precio, imagen) {
         return `
@@ -157,15 +160,17 @@
                 <h3 class='font-bold text-lg text-gray-800'>${nombre}</h3>
                 <p class='text-gray-600 text-sm mb-2'>${descripcion}</p>
                 <p class='font-semibold text-yellow-600 mb-4'>${precio}</p>
-                <button onclick="addToCart('${nombre}', ${parseFloat(precio.replace('S/', '').trim())})"
-                        class='bg-yellow-500 text-black px-6 py-2 rounded-full font-semibold hover:bg-yellow-400 transition'>
+
+                <button 
+                    onclick="addToCart('${nombre}', ${parseFloat(precio.replace('S/', '').trim())}, '/images/socio/${imagen}')"
+                    class='bg-yellow-500 text-black px-6 py-2 rounded-full font-semibold hover:bg-yellow-400 transition'>
                     Agregar 🛒
                 </button>
             </div>
         `;
     }
 
-        const secciones = {
+    const secciones = {
         promos: `
             <h2 class='text-2xl font-bold text-yellow-500 mb-6'>🎁 Promos Dulceras</h2>
             <div class='grid grid-cols-1 md:grid-cols-3 gap-6'>
@@ -234,15 +239,17 @@
         `
     };
 
-
     function mostrarSeccion(nombre) {
         const contenido = document.getElementById('contenido');
         contenido.innerHTML = secciones[nombre] || '<p class="text-gray-400">Próximamente...</p>';
     }
 
+    //
     // ===============================
-    // 🧺 CARRITO LATERAL MEJORADO
+    // 🧺 CARRITO LATERAL – BLOQUE ARREGLADO
     // ===============================
+    //
+
     const cartPanel = document.getElementById('sideCart');
     const toggleCart = document.getElementById('toggleCart');
     const closeCart = document.getElementById('closeCart');
@@ -254,69 +261,46 @@
     closeCart.addEventListener('click', () => cartPanel.classList.add('-translate-x-full'));
 
     function renderCart() {
-        fetch("{{ route('carrito.index') }}", { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-            .then(res => res.text())
-            .then(html => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const rows = doc.querySelectorAll('tbody tr');
-                const totalText = doc.querySelector('.font-bold.text-yellow-600')?.textContent ?? 'S/ 0.00';
-                const emptyMsg = doc.querySelector('p.text-gray-600');
-                
-                cartContent.innerHTML = '';
+    fetch("{{ route('carrito.index') }}", {
+        method: "GET",
+        headers: {
+            "X-Requested-With": "XMLHttpRequest"
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
 
-                if (rows.length > 0) {
-                    rows.forEach(row => {
-                        const name = row.querySelector('span.font-semibold')?.textContent;
-                        const price = row.querySelector('td:nth-child(2)')?.textContent.replace('S/', '').trim();
-                        const qty = row.querySelector('input[name="qty"]')?.value;
-                        const key = row.querySelector('input[name="key"]')?.value;
-                        const subtotal = (price * qty).toFixed(2);
+        cartContent.innerHTML = data.html;
+        cartTotal.textContent = "S/ " + data.total.toFixed(2);
 
-                        cartContent.innerHTML += `
-                            <div class="flex items-center justify-between bg-gray-800 rounded-lg p-3 shadow-md">
-                                <div class="flex-1">
-                                    <p class="font-semibold text-white">${name}</p>
-                                    <p class="text-sm text-gray-400">S/ ${price}</p>
-                                    <div class="flex items-center gap-2 mt-2">
-                                        <button onclick="updateQty('${key}', ${qty - 1})" class="px-2 py-1 bg-gray-700 rounded hover:bg-gray-600">-</button>
-                                        <span class="text-yellow-400 font-bold">${qty}</span>
-                                        <button onclick="updateQty('${key}', ${parseInt(qty) + 1})" class="px-2 py-1 bg-gray-700 rounded hover:bg-gray-600">+</button>
-                                    </div>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-yellow-400 font-semibold">S/ ${subtotal}</p>
-                                    <button onclick="removeItem('${key}')" class="text-red-400 hover:text-red-600 mt-2 block">🗑️</button>
-                                </div>
-                            </div>
-                        `;
-                    });
+        checkoutBtn.disabled = data.total <= 0;
+    })
+    .catch(err => console.error("Error cargando carrito:", err));
+}
 
-                    cartTotal.textContent = totalText;
-                    checkoutBtn.disabled = false;
-                } else if (emptyMsg) {
-                    cartContent.innerHTML = `<p class="text-gray-400">${emptyMsg.textContent}</p>`;
-                    cartTotal.textContent = 'S/ 0.00';
-                    checkoutBtn.disabled = true;
-                }
-            });
-    }
 
-    function addToCart(nombre, precio) {
+    function addToCart(nombre, precio, imagen) {
         fetch("{{ route('carrito.add') }}", {
             method: "POST",
             headers: {
                 "X-CSRF-TOKEN": "{{ csrf_token() }}",
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ name: nombre, price: precio }),
+            body: JSON.stringify({
+                name: nombre,
+                price: precio,
+                image: imagen,
+                qty: 1
+            }),
         })
         .then(res => res.json())
         .then(data => {
             if (data.success) {
                 renderCart();
                 cartPanel.classList.remove('-translate-x-full');
-            } else alert("⚠️ No se pudo agregar al carrito.");
+            } else {
+                alert("⚠️ No se pudo agregar al carrito.");
+            }
         })
         .catch(() => alert("❌ Error al conectar con el servidor."));
     }
@@ -349,20 +333,26 @@
     });
 
     document.addEventListener('DOMContentLoaded', renderCart);
-    
-        // ===============================
-    // 🎟️ AGREGAR ENTRADAS AUTOMÁTICAMENTE AL CARRITO
+
+    //
     // ===============================
+    // 🎟️ AGREGAR ENTRADAS AUTOMÁTICAMENTE
+    // ===============================
+    //
+
     document.addEventListener('DOMContentLoaded', () => {
-        // Verificamos si hay entradas en la URL
+
         const params = new URLSearchParams(window.location.search);
         const entradasData = params.get('entradas');
 
         if (entradasData) {
+
             try {
+
                 const entradas = JSON.parse(decodeURIComponent(entradasData));
 
                 entradas.forEach(e => {
+
                     fetch("{{ route('carrito.add') }}", {
                         method: "POST",
                         headers: {
@@ -380,15 +370,20 @@
                         if (data.success) renderCart();
                     })
                     .catch(() => console.warn("⚠️ No se pudo agregar una entrada al carrito."));
+
                 });
+
             } catch (err) {
                 console.error("Error al procesar las entradas:", err);
             }
+
         }
+
     });
 
-</script>
-@endsection
+    </script>
+    @endsection
+
 
 
 

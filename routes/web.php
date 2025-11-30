@@ -1,121 +1,222 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
+
+// -----------------------------
+// Controladores Públicos
+// -----------------------------
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\PedidoController;
-use App\Http\Controllers\{
-    MovieController,
-    CinemaController,
-    PromotionController,
-    CandyController
-};
+use App\Http\Controllers\MovieController;
+use App\Http\Controllers\CinemaController;
+use App\Http\Controllers\PromotionController;
+use App\Http\Controllers\CandyController;
+use App\Http\Controllers\ContactoController;
+use App\Http\Controllers\ShowtimeController;
+use App\Http\Controllers\SeatController;  
 use App\Http\Controllers\ReservaController;
-use App\Http\Controllers\ContactController;
-use App\Http\Controllers\AdminMovieController;
-use App\Models\Pedido;
 
-// 🏠 Página principal
+
+// -----------------------------
+// Controladores Admin
+// -----------------------------
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\UserAdminController;
+use App\Http\Controllers\Admin\MovieAdminController;
+use App\Http\Controllers\Admin\ShowtimeAdminController;
+
+
+// ======================================================
+// 🏠 PÁGINA PRINCIPAL
+// ======================================================
 Route::redirect('/', '/proximos-estrenos');
 
-// 🎞️ Próximos Estrenos
-Route::get('/proximos-estrenos', [MovieController::class, 'proximos'])->name('proximos');
 
-// 🎬 Películas
-Route::get('/peliculas', [MovieController::class, 'index'])->name('peliculas');
+// ======================================================
+// ⭐ CORPORATIVO
+// ======================================================
+Route::view('/corporativo', 'corporativo.index')->name('corporativo');
 
-// 🎦 Cines
-Route::get('/cines', [CinemaController::class, 'index'])->name('cines');
-Route::get('/cines/{nombre}', [CinemaController::class, 'show'])->name('cines.show');
 
-// 🎟️ Promociones
-Route::get('/promociones', fn() => view('promociones'))->name('promociones');
+// ======================================================
+// 🎞️ SECCIONES PÚBLICAS
+// ======================================================
 
-// 🍿 Dulcería
-Route::get('/dulceria', fn() => view('dulceria'))->name('dulceria');
-Route::get('/dulceria/productos', fn() => view('dulceria-productos'))->name('dulceria.productos');
+// Próximos estrenos
+Route::get('/proximos-estrenos', [MovieController::class, 'proximos'])
+    ->name('proximos-estrenos');
 
-// 👔 Corporativo
-Route::view('/corporativo', 'corporativo')->name('corporativo');
+// Películas
+Route::get('/peliculas', [MovieController::class, 'index'])
+    ->name('peliculas');
 
+// Cines
+Route::get('/cines', [CinemaController::class, 'index'])
+    ->name('cines');
+
+Route::get('/cines/{nombre}', [CinemaController::class, 'show'])
+    ->name('cines.show');
+
+// Dulcería
+Route::get('/dulceria', [CandyController::class, 'public'])
+    ->name('dulceria');
+
+
+// ======================================================
+// 🎬 FUNCIONES (SHOWTIMES) & ASIENTOS — PÚBLICO
+// ======================================================
+
+// Ver funciones de una película
+Route::get('/peliculas/{movie}/funciones', [ShowtimeController::class, 'porPelicula'])
+    ->name('showtimes.porPelicula');
+
+// Ver butacas
+Route::get('/funcion/{showtime}/asientos', [SeatController::class, 'show'])
+    ->name('asientos.ver');
+
+
+// Nueva ruta solicitada: PANTALLA DE ENTRADAS
+Route::get('/funcion/{showtime}/entradas', [SeatController::class, 'entradas'])
+    ->name('asientos.entradas');
+
+
+// Reservar butacas
+Route::post('/funcion/{showtime}/asientos/reservar', [SeatController::class, 'reserve'])
+    ->name('asientos.reservar');
+
+// Confirmar butacas
+Route::post('/funcion/{showtime}/asientos/confirmar', [SeatController::class, 'confirm'])
+    ->name('asientos.confirmar');
+
+Route::get('/funcion/{showtime}/elegir-modo', [SeatController::class, 'elegirModo'])
+    ->name('asientos.elegirModo');
+
+
+
+// ======================================================
+// 🎉 PROMOCIONES PÚBLICAS
+// ======================================================
+Route::get('/promociones', [PromotionController::class, 'publicIndex'])
+    ->name('promociones');
+
+Route::prefix('promociones')->name('promociones.')->group(function () {
+    Route::view('/cumple', 'promociones.cumple')->name('cumple');
+    Route::view('/entel', 'promociones.entel')->name('entel');
+    Route::view('/estudiante', 'promociones.estudiante')->name('estudiante');
+    Route::view('/familia', 'promociones.familia')->name('familia');
+    Route::view('/pareja', 'promociones.pareja')->name('pareja');
+    Route::view('/socio', 'promociones.socio')->name('socio');
+    Route::view('/vip', 'promociones.vip')->name('vip');
+});
+
+
+// ======================================================
+// 🧾 PEDIDOS PÚBLICOS
+// ======================================================
+Route::post('/pedido/confirmar', [PedidoController::class, 'confirmar'])
+    ->name('pedido.confirmar');
+
+Route::get('/pedido/exito/{codigo}', [PedidoController::class, 'exito'])
+    ->name('pedido.exito');
+
+
+// ======================================================
 // 🛒 CARRITO
+// ======================================================
 Route::get('/carrito', [CartController::class, 'index'])->name('carrito.index');
 Route::post('/carrito/agregar', [CartController::class, 'add'])->name('carrito.add');
 Route::patch('/carrito/actualizar', [CartController::class, 'update'])->name('carrito.update');
 Route::delete('/carrito/eliminar', [CartController::class, 'remove'])->name('carrito.remove');
 Route::delete('/carrito/vaciar', [CartController::class, 'clear'])->name('carrito.clear');
-Route::post('/carrito/checkout', [CartController::class, 'checkout'])->name('carrito.checkout');
 
-// 🧾 PEDIDOS
-Route::post('/pedido/confirmar', [PedidoController::class, 'confirmar'])->name('pedido.confirmar');
-Route::get('/pedido/exito/{codigo}', [PedidoController::class, 'exito'])->name('pedido.exito');
-Route::get('/carrito/exito/{codigo}', [CartController::class, 'exito'])->name('carrito.exito');
 
-// 💳 COMBOS
-Route::view('/combos/socio', 'combos.socio')->name('combos.socio');
-Route::view('/combos/uno-dos', 'combos.uno_dos')->name('combos.uno_dos');
-Route::view('/combos/canchitas', 'combos.canchitas')->name('combos.canchitas');
-Route::view('/combos/dulces', 'combos.dulces')->name('combos.dulces');
-Route::view('/combos/complementos', 'combos.complementos')->name('combos.complementos');
-
-// 🎟️ BUTACAS Y ENTRADAS
-Route::get('/butacas', [ReservaController::class, 'index'])->name('butacas');
-Route::get('/entradas', fn() => view('entradas'))->name('entradas');
-
-// 🎫 RESERVAS (funcional)
-Route::post('/reservar-butacas',  [ReservaController::class, 'reservar'])->name('reservas.reservar');
-Route::post('/liberar-butacas',   [ReservaController::class, 'liberar'])->name('reservas.liberar');
-Route::post('/confirmar-butacas', [ReservaController::class, 'confirmar'])->name('reservas.confirmar');
-
+// ======================================================
 // 📩 CONTACTO
-Route::post('/contacto/enviar', [ContactController::class, 'send'])->name('contacto.send');
+// ======================================================
+Route::post('/contacto/enviar', [ContactoController::class, 'send'])
+    ->name('contacto.send');
 
-// 🎛️ PANEL ADMINISTRATIVO
-Route::prefix('admin')
-    ->middleware(['auth', 'admin'])
+    // ======================================================
+// 🎟️ GUARDAR ENTRADAS (PÚBLICO)
+// ======================================================
+Route::post('/guardar-entradas', [ReservaController::class, 'guardarEntradas'])
+    ->name('guardar.entradas'); 
+
+    Route::post('/asiento/bloquear', [ReservaController::class, 'bloquearAsiento']);
+
+
+         Route::get('/carrito/checkout', function () {
+    return view('carrito.checkout');
+    })->name('carrito.checkout');
+
+// ======================================================
+// 👑 ADMINISTRACIÓN
+// ======================================================
+Route::middleware(['auth', 'admin'])
+    ->prefix('admin')
     ->name('admin.')
     ->group(function () {
-        Route::resource('movies', MovieController::class)->except(['show']);
+
+        // Dashboard
+        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+        // Usuarios
+        Route::resource('users', UserAdminController::class)->only(['index']);
+
+        // Películas
+        Route::resource('movies', MovieAdminController::class);
+
+        // Cines
         Route::resource('cinemas', CinemaController::class)->except(['show']);
-        Route::resource('promotions', PromotionController::class)->except(['show']);
+
+        // Promociones
+        Route::resource('promociones', PromotionController::class)->except(['show']);
+
+        // Dulcería
         Route::resource('candies', CandyController::class)->except(['show']);
+
+        // Funciones
+        Route::resource('showtimes', ShowtimeAdminController::class)->except(['show']);
+
+        // Asientos Admin
+        Route::get('showtimes/{showtime}/asientos', [SeatController::class, 'adminIndex'])
+            ->name('showtimes.asientos');
+
+            
+
+
     });
 
-// 🎬 CRUD admin separado
-Route::prefix('admin')->group(function () {
-    Route::resource('movies', AdminMovieController::class);
-});
 
-// 🔸 Promociones individuales
-Route::view('/promociones/entel', 'promociones.entel')->name('promo.entel');
-Route::view('/promociones/pareja', 'promociones.pareja')->name('promo.pareja');
-Route::view('/promociones/estudiante', 'promociones.estudiante')->name('promo.estudiante');
-Route::view('/promociones/cumple', 'promociones.cumple')->name('promo.cumple');
-Route::view('/promociones/vip', 'promociones.vip')->name('promo.vip');
-Route::view('/promociones/familia', 'promociones.familia')->name('promo.familia');
-Route::view('/promociones/socio', 'promociones.socio')->name('promo.socio');
+// ===========================
+// BENEFICIOS / LOGIN INTERMEDIO
+// ===========================
+Route::get('/beneficios/login', [SeatController::class, 'beneficiosLogin'])
+    ->name('beneficios.login');
 
+Route::post('/beneficios/procesar', [SeatController::class, 'beneficiosProcesar'])
+    ->name('beneficios.procesar');
+
+
+// ======================================================
 // 👤 PERFIL DE USUARIO
+// ======================================================
 Route::middleware('auth')->group(function () {
-    // CRUD Películas
-    Route::get('/movies/create', [MovieController::class, 'create'])->name('movies.create');
-    Route::post('/movies', [MovieController::class, 'store'])->name('movies.store');
-
-    // Dashboard
-    Route::get('/dashboard', function () {
-        $user = Auth::user();
-        $pedidos = Pedido::orderBy('created_at', 'desc')->take(5)->get();
-        return view('dashboard', compact('user', 'pedidos'));
-    })->middleware(['verified'])->name('dashboard');
-
-    // Perfil
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
+// ======================================================
+// 🔐 AUTENTICACIÓN
+// ======================================================
 require __DIR__ . '/auth.php';
+
+
+
+
 
 
 

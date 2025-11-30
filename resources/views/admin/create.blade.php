@@ -51,7 +51,7 @@
 
         <div>
             <label class="block font-semibold">Sinopsis</label>
-            <textarea name="synopsis" rows="3" placeholder="Resumen breve de la película..." class="w-full p-2 rounded bg-gray-800 border border-gray-700"></textarea>
+            <textarea name="synopsis" rows="3" class="w-full p-2 rounded bg-gray-800 border border-gray-700"></textarea>
         </div>
 
         <div>
@@ -67,7 +67,9 @@
 
         <div>
             <label class="block font-semibold">Horarios (JSON)</label>
-            <textarea name="schedules" rows="3" placeholder='{"Arequipa":{"Cinerama Mall Aventura":["15:00","18:00"]}}' class="w-full p-2 rounded bg-gray-800 border border-gray-700"></textarea>
+            <textarea name="schedules" rows="3"
+                      placeholder='{"Arequipa":{"Cinerama Mall Aventura":["15:00","18:00"]}}'
+                      class="w-full p-2 rounded bg-gray-800 border border-gray-700"></textarea>
         </div>
 
         <div class="pt-4">
@@ -79,3 +81,4 @@
     </form>
 </div>
 @endsection
+

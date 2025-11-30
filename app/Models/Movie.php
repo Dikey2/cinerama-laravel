@@ -12,8 +12,7 @@ class Movie extends Model
     protected $fillable = [
         'title',
         'description',
-        'poster',
-        'image',
+        'image',            // 🔥 imagen real
         'release_date',
         'genre',
         'duration',
@@ -22,12 +21,20 @@ class Movie extends Model
         'language',
         'city',
         'synopsis',
-        'schedules',
         'trailer_url'
     ];
 
-protected $casts = [
-    'schedules' => 'array',
-];
+    protected $casts = [
+        'release_date' => 'datetime',
+    ];
 
+    // 🔥 Horarios reales desde la tabla showtimes
+    public function showtimes()
+    {
+        return $this->hasMany(Showtime::class);
+    }
 }
+
+
+
+

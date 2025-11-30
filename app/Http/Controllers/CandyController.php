@@ -8,16 +8,27 @@ use Illuminate\Http\Request;
 class CandyController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * PUBLIC — Vista del cliente
+     */
+    public function public()
+    {
+        // Como tu tabla no tiene "categoria", quitamos los filtros
+        $items = Candy::all();
+
+        return view('dulceria.index', compact('items'));
+    }
+
+    /**
+     * ADMIN — Index
      */
     public function index()
     {
-        $items = Candy::latest()->paginate(10);
+        $items = Candy::latest()->paginate(15);
         return view('admin.candies.index', compact('items'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * ADMIN — Crear
      */
     public function create()
     {
@@ -25,25 +36,34 @@ class CandyController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * ADMIN — Guardar
      */
-    public function store(Request $r)
+    public function store(Request $request)
     {
-        $r->validate(['name' => 'required', 'price' => 'required|numeric']);
-        Candy::create($r->only('name', 'price', 'image'));
-        return redirect()->route('admin.candies.index')->with('success', 'Producto creado');
+        $data = $request->validate([
+            'nombre' => 'required|string',
+            'precio' => 'required|numeric',
+            'imagen' => 'nullable|image|max:2048'
+        ]);
+
+        // Convertir a campos reales de tu base de datos
+        $candyData = [
+            'name' => $data['nombre'],
+            'price' => $data['precio'],
+        ];
+
+        if ($request->hasFile('imagen')) {
+            $candyData['image'] = $request->file('imagen')->store('candies', 'public');
+        }
+
+        Candy::create($candyData);
+
+        return redirect()->route('admin.candies.index')
+            ->with('success', 'Producto creado correctamente');
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Candy $candy)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
+     * ADMIN — Editar
      */
     public function edit(Candy $candy)
     {
@@ -51,22 +71,43 @@ class CandyController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * ADMIN — Actualizar
      */
-    public function update(Request $r, Candy $candy)
+    public function update(Request $request, Candy $candy)
     {
-        $r->validate(['name' => 'required', 'price' => 'required|numeric']);
-        $candy->update($r->only('name', 'price', 'image'));
-        return redirect()->route('admin.candies.index')->with('success', 'Producto actualizado');
+        $data = $request->validate([
+            'nombre' => 'required|string',
+            'precio' => 'required|numeric',
+            'imagen' => 'nullable|image|max:2048'
+        ]);
+
+        $candyData = [
+            'name'  => $data['nombre'],
+            'price' => $data['precio'],
+        ];
+
+        if ($request->hasFile('imagen')) {
+            $candyData['image'] = $request->file('imagen')->store('candies', 'public');
+        }
+
+        $candy->update($candyData);
+
+        return redirect()->route('admin.candies.index')
+            ->with('success', 'Producto actualizado correctamente');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * ADMIN — Eliminar
      */
     public function destroy(Candy $candy)
     {
         $candy->delete();
-        return back()->with('success', 'Producto eliminado');
+
+        return redirect()->route('admin.candies.index')
+            ->with('success', 'Producto eliminado correctamente');
     }
 }
+
+
+
 

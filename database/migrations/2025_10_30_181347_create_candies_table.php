@@ -6,26 +6,24 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
-{
-    Schema::create('candies', function (Blueprint $table) {
-        $table->id();
-        $table->string('name');
-        $table->decimal('price', 8, 2);
-        $table->string('image')->nullable();
-        $table->timestamps();
-    });
-}
+    {
+        Schema::create('candies', function (Blueprint $table) {
+            $table->id();
+            $table->string('nombre'); // Nombre visible (Promo 1, Promo 2…)
+            $table->string('descripcion')->nullable(); // Texto corto debajo del título
+            $table->decimal('precio', 8, 2); // S/ 42.00
+            $table->string('categoria')->default('promo'); 
+            // promo, socio, combos1o2, canchitas, dulces, complementos
 
+            $table->string('imagen')->nullable(); // Imagen del combo
+            $table->timestamps();
+        });
+    }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('candies');
     }
 };
+

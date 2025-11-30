@@ -7,20 +7,20 @@ use Illuminate\Foundation\Http\Kernel as HttpKernel;
 class Kernel extends HttpKernel
 {
     /**
-     * Middleware globales que se ejecutan en cada solicitud.
+     * Middleware globales
      */
     protected $middleware = [
         \App\Http\Middleware\TrustHosts::class,
         \App\Http\Middleware\TrustProxies::class,
-        \App\Http\Middleware\PreventRequestsDuringMaintenance::class, // ✅ reemplazo moderno
+        \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
+        \Illuminate\Http\Middleware\HandleCors::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-        \Illuminate\Http\Middleware\HandleCors::class,
     ];
 
     /**
-     * Grupos de middleware para las rutas.
+     * Grupos middleware
      */
     protected $middlewareGroups = [
         'web' => [
@@ -30,8 +30,6 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \App\Http\Middleware\DebugAuth::class,
-
         ],
 
         'api' => [
@@ -41,19 +39,17 @@ class Kernel extends HttpKernel
     ];
 
     /**
-     * Middleware individuales asignables por ruta.
+     * Aliases (Laravel 12)
      */
-    protected $routeMiddleware = [
+    protected $middlewareAliases = [
         'auth' => \App\Http\Middleware\Authenticate::class,
-        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
-        // Middleware personalizado de administrador
+        // 🔥 ESTE ES EL ALIAS QUE TE FALTABA
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
     ];
-
-    
 }
+
+
 
 

@@ -28,6 +28,7 @@
 </div>
 
 <script>
+
     // 🧩 Generador de tarjetas
     function comboCard(nombre, descripcion, precio, imagen) {
         return `
@@ -36,15 +37,16 @@
                 <h3 class='font-bold text-lg text-gray-800'>${nombre}</h3>
                 <p class='text-gray-600 text-sm mb-2'>${descripcion}</p>
                 <p class='font-semibold text-yellow-600 mb-4'>S/ ${precio}</p>
-                <button
+
+                <button 
                     class='btn-add bg-yellow-500 text-black px-6 py-2 rounded-full font-semibold hover:bg-yellow-400 transition'
                     data-name='${nombre}'
-                    data-price='${precio.replace("S/","").trim()}'
+                    data-price='${precio}'
                     data-image='/images/socio/${imagen}'
                 >Agregar 🛒</button>
             </div>
         `;
-    }
+    }   
 
     // 🧠 Secciones dinámicas
     const secciones = {
@@ -84,59 +86,101 @@
         `
     };
 
-    // 🔄 Mostrar secciones al hacer clic
-    document.querySelectorAll('.categoria-btn').forEach(boton => {
-        boton.addEventListener('click', () => {
-            const nombre = boton.dataset.seccion;
-            mostrarSeccion(nombre);
+     // 🔄 Mostrar secciones
+    document.querySelectorAll('.categoria-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const sec = btn.dataset.seccion;
+            mostrarSeccion(sec);
+
             document.querySelectorAll('.categoria-btn').forEach(b => b.classList.remove('bg-yellow-400'));
-            boton.classList.add('bg-yellow-400');
+            btn.classList.add('bg-yellow-400');
         });
     });
 
-    // 🧠 Mostrar sección dinámica
     function mostrarSeccion(nombre) {
-        const contenido = document.getElementById('contenido');
-        contenido.innerHTML = secciones[nombre] || '<p class="text-gray-400">Próximamente...</p>';
+        document.getElementById('contenido').innerHTML = secciones[nombre];
         attachAddHandlers();
     }
 
-    // ⚙️ Enviar productos al backend (carrito)
+     // ===============================
+    // 🟧 CARRITO LATERAL REAL FUNCIONAL
+    // ===============================
+
     function attachAddHandlers(){
-        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         document.querySelectorAll('.btn-add').forEach(btn=>{
+
             btn.addEventListener('click', async ()=>{
-                const body = new URLSearchParams();
-                body.append('name',  btn.dataset.name);
-                body.append('price', btn.dataset.price);
-                body.append('image', btn.dataset.image);
-                body.append('_token', token);
+
+                const body = {
+                    name:  btn.dataset.name,
+                    price: btn.dataset.price,
+                    image: btn.dataset.image,
+                    qty: 1
+                };
 
                 const res = await fetch(`{{ route('carrito.add') }}`, {
-                    method: 'POST',
-                    headers: { 
-                        'Accept': 'application/json', 
-                        'X-Requested-With':'XMLHttpRequest' 
+                    method: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                        "Content-Type": "application/json"
                     },
-                    body
+                    body: JSON.stringify(body)
                 });
 
                 const data = await res.json();
-                if (data?.ok && data?.redirect) {
-                    window.location.href = data.redirect; // Redirige al carrito
-                } else {
-                    // Fallback si no hay redirect
-                    window.location.href = `{{ route('carrito.index') }}`;
+                if(data.success){
+                    window.location.href = data.redirect;
                 }
             });
         });
     }
 
-    // 👀 Render inicial al cargar la página
+    // Al cargar página → mostrar promos
     mostrarSeccion('promos');
+    // =====================================
+// 🎟 AGREGAR ENTRADAS AUTOMÁTICAMENTE
+// =====================================
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    const params = new URLSearchParams(window.location.search);
+    const entradasData = params.get('entradas');
+
+    if (!entradasData) return;
+
+    try {
+        const entradas = JSON.parse(decodeURIComponent(entradasData));
+
+        entradas.forEach(e => {
+
+            fetch("{{ route('carrito.add') }}", {
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: `Entrada ${e.nombre}`,
+                    price: e.precio,
+                    qty: e.cantidad,
+                    image: "/images/ticket.png"
+                })
+            })
+            .then(r => r.json())
+            .then(d => {
+                if (d.success) {
+                    console.log("Entrada agregada:", e.nombre);
+                }
+            });
+
+        });
+
+    } catch (err) {
+        console.error("Error al cargar entradas:", err);
+    }
+
+});
+
+
 </script>
 @endsection
-
-
-
-

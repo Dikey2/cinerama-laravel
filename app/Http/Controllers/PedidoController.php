@@ -11,19 +11,37 @@ class PedidoController extends Controller
 {
     public function confirmar(Request $request)
     {
+        // ❗ Leer carrito de dulcería
         $cart = session('cart', []);
-        if (empty($cart)) {
-            return back()->with('error', 'Tu carrito está vacío.');
+
+        // ❗ Leer entradas y butacas
+        $entradas = session('reserva.entradas', []);
+        $seats = session('reserva.seats', []);
+
+        // ❗ Calculamos subtotales
+        $totalDulceria = collect($cart)->sum(fn ($item) => $item['price'] * $item['qty']);
+
+        $totalEntradas = 0;
+        foreach ($entradas as $e) {
+            $totalEntradas += $e['precio'] * $e['cantidad'];
         }
 
+        // ❗ Si NO hay nada comprado
+        if (empty($cart) && empty($entradas)) {
+            return back()->with('error', 'No tienes ningún producto en el pedido.');
+        }
+
+        // Validación de datos del cliente
         $request->validate([
             'nombre_cliente' => 'required|string|max:100',
             'correo_cliente' => 'nullable|email',
             'telefono_cliente' => 'nullable|string|max:20',
         ]);
 
-        $total = collect($cart)->sum(fn ($item) => $item['price'] * $item['qty']);
+        // ❗ TOTAL FINAL (entradas + dulcería)
+        $total = $totalDulceria + $totalEntradas;
 
+        // Crear pedido
         $pedido = Pedido::create([
             'codigo' => 'PED-' . strtoupper(Str::random(6)),
             'nombre_cliente' => $request->nombre_cliente,
@@ -33,6 +51,22 @@ class PedidoController extends Controller
             'estado' => 'pendiente',
         ]);
 
+        // =============================
+        // 📌 GUARDAR DETALLES: ENTRADAS
+        // =============================
+        foreach ($entradas as $e) {
+            DetallePedido::create([
+                'pedido_id' => $pedido->id,
+                'producto' => "Entrada: " . $e['nombre'] . " (" . implode(', ', $seats) . ")",
+                'cantidad' => $e['cantidad'],
+                'precio_unitario' => $e['precio'],
+                'subtotal' => $e['cantidad'] * $e['precio'],
+            ]);
+        }
+
+        // =============================
+        // 📌 GUARDAR DETALLES: DULCERÍA
+        // =============================
         foreach ($cart as $item) {
             DetallePedido::create([
                 'pedido_id' => $pedido->id,
@@ -43,10 +77,15 @@ class PedidoController extends Controller
             ]);
         }
 
+        // Limpiar sesiones
         session()->forget('cart');
+        session()->forget('reserva.entradas');
+        session()->forget('reserva.seats');
 
         return redirect()->route('pedido.exito', ['codigo' => $pedido->codigo]);
     }
+
+
 
     public function exito($codigo)
     {
@@ -54,4 +93,5 @@ class PedidoController extends Controller
         return view('carrito.exito', compact('pedido'));
     }
 }
+
 

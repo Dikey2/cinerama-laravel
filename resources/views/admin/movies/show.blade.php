@@ -16,7 +16,7 @@
             <!-- 📸 Poster -->
             <div class="flex-shrink-0 w-full md:w-1/3">
                 @if($movie->image)
-                    <img src="{{ asset('storage/images/peliculas/' . $movie->image) }}" 
+                    <img src="{{ asset('storage/' . $movie->image) }}" 
                          alt="{{ $movie->title }}" 
                          class="rounded-lg shadow-md w-full object-cover h-[400px] border border-gray-700">
                 @else
@@ -29,7 +29,12 @@
             <!-- 🧾 Información -->
             <div class="flex-1 space-y-4">
                 <h1 class="text-4xl font-extrabold text-yellow-400">{{ $movie->title }}</h1>
-                <p class="text-gray-300 text-sm italic">{{ $movie->genre }} | {{ $movie->duration ?? '—' }} | {{ $movie->classification ?? 'Sin clasificar' }}</p>
+
+                <p class="text-gray-300 text-sm italic">
+                    {{ $movie->genre }} | 
+                    {{ $movie->duration ?? '—' }} | 
+                    {{ $movie->classification ?? 'Sin clasificar' }}
+                </p>
 
                 <p class="text-gray-400 leading-relaxed mt-4">
                     {{ $movie->synopsis ?? 'Sin sinopsis registrada.' }}
@@ -40,7 +45,7 @@
                     <div><strong class="text-yellow-400">🗣 Idioma:</strong> {{ $movie->language ?? 'N/A' }}</div>
                     <div><strong class="text-yellow-400">📍 Ciudad:</strong> {{ $movie->city ?? 'N/A' }}</div>
                     <div><strong class="text-yellow-400">📅 Estreno:</strong> 
-                        {{ $movie->release_date ? \Carbon\Carbon::parse($movie->release_date)->format('d/m/Y') : 'Sin fecha' }}
+                        {{ $movie->release_date ? $movie->release_date->format('d/m/Y') : 'Sin fecha' }}
                     </div>
                 </div>
 
@@ -56,40 +61,16 @@
             </div>
         </div>
 
-        <!-- 🕒 Horarios -->
-        @if($movie->schedules)
-            <div class="bg-gray-900 mt-10 p-6 rounded-xl border border-gray-700">
-                <h2 class="text-2xl font-bold text-yellow-400 mb-4">🕒 Horarios Disponibles</h2>
+        <!-- 🕒 Horarios REALES (pendiente de integrar con showtimes) -->
+        <div class="bg-gray-900 mt-10 p-6 rounded-xl border border-gray-700">
+            <h2 class="text-2xl font-bold text-yellow-400 mb-4">🕒 Horarios</h2>
 
-                @php
-                    $schedules = is_string($movie->schedules)
-                        ? json_decode($movie->schedules, true)
-                        : $movie->schedules;
-                @endphp
+            <p class="text-gray-400 italic">
+                Los horarios se gestionan desde <strong>Showtimes</strong> y se mostrarán en esta sección próximamente.
+            </p>
+        </div>
 
-                @if(is_array($schedules))
-                    @foreach($schedules as $ciudad => $cines)
-                        <div class="mb-6">
-                            <h3 class="text-xl text-yellow-300 font-semibold mb-2">{{ $ciudad }}</h3>
-                            @foreach($cines as $cine => $horas)
-                                <div class="ml-4 mb-2">
-                                    <p class="text-gray-300 font-medium">{{ $cine }}</p>
-                                    <div class="flex flex-wrap gap-2 mt-1">
-                                        @foreach($horas as $hora)
-                                            <span class="bg-yellow-500 text-black text-xs px-3 py-1 rounded-full font-semibold">
-                                                {{ $hora }}
-                                            </span>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    @endforeach
-                @else
-                    <p class="text-gray-400 italic">No se han registrado horarios válidos.</p>
-                @endif
-            </div>
-        @endif
     </div>
 </div>
 @endsection
+

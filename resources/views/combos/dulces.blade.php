@@ -26,7 +26,7 @@
             <p class="text-gray-600 text-sm mb-2">{{ $item['descripcion'] }}</p>
             <p class="font-semibold text-yellow-600 mb-4">S/ {{ number_format($item['precio'], 2) }}</p>
             
-            <button onclick="agregarAlCarrito('{{ $item['nombre'] }}', {{ $item['precio'] }}, '{{ asset('images/socio/'.$item['imagen']) }}')" 
+            <button onclick="addToCart('{{ $item['nombre'] }}', {{ $item['precio'] }}, '{{ asset('images/socio/'.$item['imagen']) }}')" 
                     class="bg-yellow-500 text-black px-6 py-2 rounded-full font-semibold hover:bg-yellow-400 transition">
                 Agregar 🛒
             </button>
@@ -36,7 +36,7 @@
 </div>
 
 <script>
-async function agregarAlCarrito(nombre, precio, imagen) {
+async function addToCart(nombre, precio, imagen) {
     try {
         const response = await fetch("{{ url('carrito/agregar') }}", {
             method: "POST",
@@ -55,15 +55,28 @@ async function agregarAlCarrito(nombre, precio, imagen) {
         const data = await response.json();
 
         if (data.ok) {
-            alert("✅ Producto agregado al carrito correctamente");
+
+            // 🔥 Actualizar el panel lateral del carrito (si existe)
+            if (typeof renderCart === "function") {
+                renderCart();
+            }
+
+            // 🔥 Abrir el panel del carrito (si existe)
+            const panel = document.getElementById("sideCart");
+            if (panel) {
+                panel.classList.remove('-translate-x-full');
+            }
+
         } else {
-            alert("⚠️ Ocurrió un problema al agregar el producto");
+            alert("⚠️ Error al agregar el producto al carrito");
         }
+
     } catch (error) {
         console.error("Error al agregar al carrito:", error);
         alert("❌ No se pudo agregar al carrito. Inténtalo de nuevo.");
     }
 }
+
 </script>
 @endsection
 

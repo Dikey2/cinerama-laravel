@@ -1,21 +1,12 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace App\Providers;
 
-use Illuminate\Auth\Middleware\Authenticate as Middleware;
+use Illuminate\Support\ServiceProvider;
 
-class Authenticate extends Middleware
+class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Obtiene la ruta a la que el usuario será redirigido si no está autenticado.
-     */
-    protected function redirectTo($request): ?string
-    {
-        if (! $request->expectsJson()) {
-            return route('login'); // 👈 DEBE redirigir al login, no a home
-        }
-
-        return null;
-    }
+    public function register(): void {}
+    public function boot(): void {}
 }
 

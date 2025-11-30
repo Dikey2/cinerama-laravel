@@ -12,7 +12,6 @@ class CinemaController extends Controller
      */
     public function index(Request $request)
     {
-        // Lista fija de cines (simulación de datos)
         $cines = [
             [
                 'nombre' => 'Mall Aventura',
@@ -40,25 +39,22 @@ class CinemaController extends Controller
                 'ciudad' => 'Lima',
                 'direccion' => 'San Juan de Miraflores 15801',
                 'formatos' => ['3D', 'REGULAR'],
-                'imagen' => 'https://sika.scene7.com/is/image/sika/pe-edificacion-y-vivienda-2016-mall-del-sur-01?wid=1920&hei=998&fit=crop%2C1'
+                'imagen' => 'https://sika.scene7.com/is/image/sika/pe-edificacion-y-vivienda-2016-mall-del-sur-01'
             ],
         ];
 
-        // Filtro por ciudad
         if ($request->filled('ciudad') && $request->ciudad !== 'Todas') {
-            $cines = array_filter($cines, function ($cine) use ($request) {
-                return strtolower($cine['ciudad']) === strtolower($request->ciudad);
-            });
+            $cines = array_filter($cines, fn($cine) =>
+                strtolower($cine['ciudad']) === strtolower($request->ciudad)
+            );
         }
 
-        // Filtro por formato
         if ($request->filled('formato') && $request->formato !== 'Todos') {
-            $cines = array_filter($cines, function ($cine) use ($request) {
-                return in_array($request->formato, $cine['formatos']);
-            });
+            $cines = array_filter($cines, fn($cine) =>
+                in_array($request->formato, $cine['formatos'])
+            );
         }
 
-        // Enviar resultados a la vista
         return view('cines', [
             'cines' => $cines,
             'ciudadSeleccionada' => $request->ciudad ?? 'Todas',
@@ -66,12 +62,12 @@ class CinemaController extends Controller
         ]);
     }
 
+
     /**
-     * Mostrar detalles de un cine específico
+     * Detalles de cine (público)
      */
     public function show($nombre)
     {
-        // Mismo arreglo de cines
         $cines = [
             [
                 'nombre' => 'Mall Aventura',
@@ -107,11 +103,10 @@ class CinemaController extends Controller
                 'salas' => 9,
                 'formatos' => ['3D', 'REGULAR'],
                 'servicios' => ['Estacionamiento', 'Accesibilidad'],
-                'imagen' => 'https://sika.scene7.com/is/image/sika/pe-edificacion-y-vivienda-2016-mall-del-sur-01?wid=1920&hei=998&fit=crop%2C1'
+                'imagen' => 'https://sika.scene7.com/is/image/sika/pe-edificacion-y-vivienda-2016-mall-del-sur-01'
             ],
         ];
 
-        // Buscar cine por nombre
         $cine = collect($cines)->firstWhere('nombre', str_replace('-', ' ', urldecode($nombre)));
 
         if (!$cine) {
@@ -121,60 +116,67 @@ class CinemaController extends Controller
         return view('cine-detalle', compact('cine'));
     }
 
-    /**
-     * Panel Admin: lista de cines guardados en BD
+
+    /* ============================================================
+     * 🎬 SECCIÓN PANEL ADMIN (ESTILO RESOURCE DEL RECUADRO)
+     * ============================================================
      */
+
     public function adminIndex()
     {
         $items = Cinema::latest()->paginate(10);
         return view('admin.cinemas.index', compact('items'));
     }
 
-    /**
-     * Crear nuevo cine (panel admin)
-     */
     public function create()
     {
         return view('admin.cinemas.create');
     }
 
-    /**
-     * Guardar cine en BD
-     */
-    public function store(Request $r)
+    public function store(Request $request)
     {
-        $r->validate(['name' => 'required']);
-        Cinema::create($r->only('name', 'address', 'city'));
-        return redirect()->route('admin.cinemas.index')->with('success', 'Cinema creado');
+        $request->validate([
+            'name'    => 'required|string',
+            'address' => 'required|string',
+            'city'    => 'required|string',
+        ]);
+
+        Cinema::create($request->only('name', 'address', 'city'));
+
+        return redirect()
+            ->route('admin.cinemas.index')
+            ->with('success', 'Cine creado');
     }
 
-    /**
-     * Editar cine (panel admin)
-     */
+
     public function edit(Cinema $cinema)
     {
         return view('admin.cinemas.edit', compact('cinema'));
     }
 
-    /**
-     * Actualizar cine en BD
-     */
-    public function update(Request $r, Cinema $cinema)
+    public function update(Request $request, Cinema $cinema)
     {
-        $r->validate(['name' => 'required']);
-        $cinema->update($r->only('name', 'address', 'city'));
-        return redirect()->route('admin.cinemas.index')->with('success', 'Cinema actualizado');
-    }
+        $request->validate([
+            'name'    => 'required|string',
+            'address' => 'required|string',
+            'city'    => 'required|string',
+        ]);
 
-    /**
-     * Eliminar cine
-     */
+        $cinema->update($request->only('name', 'address', 'city'));
+
+        return redirect()
+            ->route('admin.cinemas.index')
+            ->with('success', 'Cine actualizado');
+        }
+
     public function destroy(Cinema $cinema)
     {
         $cinema->delete();
-        return back()->with('success', 'Cinema eliminado');
+        return back()->with('success', 'Cine eliminado');
     }
 }
+
+
 
 
 

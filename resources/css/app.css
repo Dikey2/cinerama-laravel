@@ -1,20 +1,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Personalización adicional */
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  background-color: #000;
-  color: #fff;
-}
-
-a:hover {
-  color: #FFD700;
-  transition: color 0.3s ease-in-out;
-}
-
-

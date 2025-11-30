@@ -3,10 +3,23 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Ticket extends Model {
+class Ticket extends Model
+{
     use HasFactory;
-    protected $fillable = ['movie_id','cinema_id','user_id','show_date','qty','price_total'];
-    protected $casts = ['show_date'=>'date','price_total'=>'decimal:2'];
-    public function movie(){ return $this->belongsTo(Movie::class); }
+
+    protected $fillable = [
+        'showtime_id', 'user_id', 'seats', 'total', 'code', 'status',
+    ];
+
+    protected $casts = [
+        'seats' => 'array',
+    ];
+
+    public function showtime()
+    {
+        return $this->belongsTo(Showtime::class);
+    }
 }
+

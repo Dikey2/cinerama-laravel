@@ -10,9 +10,8 @@ use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
-    public const HOME = '/';
-
- 
+    // 🔥 Ruta a donde se redirige luego del login:
+    public const HOME = '/proximos-estrenos';
 
     public function boot(): void
     {
@@ -31,8 +30,10 @@ class RouteServiceProvider extends ServiceProvider
     protected function configureRateLimiting(): void
     {
         RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+            return Limit::perMinute(60)
+                ->by($request->user()?->id ?: $request->ip());
         });
     }
 }
+
 

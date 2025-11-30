@@ -1,8 +1,11 @@
 <?php
+
 namespace App\Algorithms;
 
-class MergeSortStrategy {
-    public function sort(array $movies): array {
+class MergeSortStrategy
+{
+    public function sort(array $movies): array
+    {
         $count = count($movies);
         if ($count < 2) return $movies;
 
@@ -16,14 +19,22 @@ class MergeSortStrategy {
         );
     }
 
-    private function merge(array $a, array $b): array {
+    private function merge(array $a, array $b): array
+    {
         $result = [];
+
         while (count($a) && count($b)) {
-            if ($a[0]['release_date'] <= $b[0]['release_date'])
+            // Usamos 'created_at' como criterio principal (fecha de creación)
+            $leftDate = $a[0]['created_at'] ?? '0000-00-00';
+            $rightDate = $b[0]['created_at'] ?? '0000-00-00';
+
+            if ($leftDate <= $rightDate)
                 $result[] = array_shift($a);
             else
                 $result[] = array_shift($b);
         }
+
         return array_merge($result, $a, $b);
     }
 }
+

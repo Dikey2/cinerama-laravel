@@ -3,25 +3,27 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Ticket;
-use App\Models\SnackOrder;
-use App\Models\Visit;
 use App\Models\Movie;
-use Illuminate\Support\Facades\DB;
+use App\Models\Cinema;
+use App\Models\Promotion;
+use App\Models\Pedido;
+use App\Models\User;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $today = now()->toDateString();
-
-        $kpiRevenue = Ticket::whereDate('created_at','>=', now()->subDays(30))->sum('price_total')
-                    + SnackOrder::whereDate('created_at','>=', now()->subDays(30))->sum('total');
-
-        $kpiTickets = Ticket::whereDate('created_at','>=', now()->subDays(30))->sum('qty');
-        $kpiVisits  = Visit::whereDate('visited_at','>=', now()->subDays(30))->count();
-        $kpiMovies  = Movie::count();
-
-        return view('admin.dashboard', compact('kpiRevenue','kpiTickets','kpiVisits','kpiMovies'));
+        return view('admin.dashboard', [
+            'stats' => [
+                'movies'      => Movie::count(),
+                'cinemas'     => Cinema::count(),
+                'promos'      => Promotion::count(),
+                'orders'      => Pedido::count(),
+                'users'       => User::count(),
+            ],
+            // si aún no tienes pedidos, puedes dejar esto vacío o comentar
+            'lastOrders' => Pedido::latest()->take(5)->get(),
+        ]);
     }
 }
+
