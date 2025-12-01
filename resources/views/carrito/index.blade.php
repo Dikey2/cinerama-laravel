@@ -132,17 +132,24 @@
 
     <div>
         <input type="text" name="nombre_cliente" placeholder="Nombre completo"
-               class="w-full rounded-lg border-gray-300 p-2 focus:ring-2 focus:ring-yellow-400" required>
+    class="w-full rounded-lg border-gray-300 p-2 
+           text-black placeholder-black 
+           focus:ring-2 focus:ring-yellow-400 bg-white" required>
+
     </div>
 
     <div>
-        <input type="email" name="correo_cliente" placeholder="Correo electrónico"
-               class="w-full rounded-lg border-gray-300 p-2 focus:ring-2 focus:ring-yellow-400">
+        <input type="text" name="correo_cliente" placeholder="Correo electrónico"
+    class="w-full rounded-lg border-gray-300 p-2 
+           text-black placeholder-black 
+           focus:ring-2 focus:ring-yellow-400 bg-white" required>
     </div>
 
     <div>
         <input type="text" name="telefono_cliente" placeholder="Teléfono"
-               class="w-full rounded-lg border-gray-300 p-2 focus:ring-2 focus:ring-yellow-400">
+    class="w-full rounded-lg border-gray-300 p-2 
+           text-black placeholder-black 
+           focus:ring-2 focus:ring-yellow-400 bg-white" required>
     </div>
 
     <!-- 💳 Métodos de pago -->
@@ -152,19 +159,20 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
 
             <!-- TARJETA -->
-            <label class="flex items-center gap-2 bg-gray-100 border rounded-lg p-3 cursor-pointer hover:bg-gray-200 transition">
-                <input type="radio" name="metodo_pago" value="tarjeta" required onclick="mostrarTarjeta()">
-                💳 Tarjeta de crédito / débito
-            </label>
+            <label class="flex items-center gap-2 bg-gray-100 text-black border rounded-lg p-3 cursor-pointer hover:bg-gray-200 transition">
+    <input type="radio" name="metodo_pago" value="tarjeta" onclick="mostrarTarjeta()">
+    💳 Tarjeta de crédito / débito
+</label>
+
 
             <!-- YAPE -->
-            <label class="flex items-center gap-2 bg-gray-100 border rounded-lg p-3 cursor-pointer hover:bg-gray-200 transition">
+            <label class="flex items-center gap-2 bg-gray-100 text-black border rounded-lg p-3 cursor-pointer hover:bg-gray-200 transition">
                 <input type="radio" name="metodo_pago" value="yape" onclick="mostrarQR('yape')">
                 📱 Yape
             </label>
 
             <!-- PLIN -->
-            <label class="flex items-center gap-2 bg-gray-100 border rounded-lg p-3 cursor-pointer hover:bg-gray-200 transition">
+            <label class="flex items-center gap-2 bg-gray-100 text-black border rounded-lg p-3 cursor-pointer hover:bg-gray-200 transition">
                 <input type="radio" name="metodo_pago" value="plin" onclick="mostrarQR('plin')">
                 💸 Plin
             </label>

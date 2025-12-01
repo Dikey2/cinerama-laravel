@@ -204,6 +204,45 @@ function entradasApp(maxEntradas, usuarioLogueado) {
 }
 </script>
 
+<!-- 🎛 Modal personalizado Cinerama -->
+<div id="alertModal"
+     class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+
+    <div class="bg-[#111] border border-yellow-500/30 rounded-xl p-6 w-80 shadow-2xl animate-fade-in">
+
+        <h2 class="text-yellow-400 text-lg font-bold mb-2">
+            ⚠ Atención
+        </h2>
+
+        <p id="alertMessage" class="text-gray-300 text-sm mb-5">
+            Mensaje aquí...
+        </p>
+
+        <button onclick="closeAlert()"
+                class="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-semibold py-2 rounded-lg transition">
+            Aceptar
+        </button>
+    </div>
+</div>
+
+<style>
+@keyframes fade-in {
+    from { opacity: 0; transform: scale(.9); }
+    to   { opacity: 1; transform: scale(1); }
+}
+.animate-fade-in { animation: fade-in .2s ease-out; }
+</style>
+
+<script>
+function showAlert(message) {
+    document.getElementById("alertMessage").innerText = message;
+    document.getElementById("alertModal").classList.remove("hidden");
+}
+
+function closeAlert() {
+    document.getElementById("alertModal").classList.add("hidden");
+}
+</script>
 
 @endsection
 

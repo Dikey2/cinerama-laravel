@@ -25,7 +25,6 @@ class MovieAdminController extends Controller
     // 💾 Guardar nueva película
     public function store(Request $request)
     {
-        // Validación
         $validated = $request->validate([
             'title'           => 'required|string|max:255',
             'description'     => 'nullable|string',
@@ -48,7 +47,8 @@ class MovieAdminController extends Controller
 
             $request->poster->storeAs('public/images/peliculas', $nombre);
 
-            $validated['image'] = "images/peliculas/" . $nombre;
+            // ⚠️ EL FIX → GUARDAR EN EL CAMPO CORRECTO
+            $validated['poster'] = "images/peliculas/" . $nombre;
         }
 
         Movie::create($validated);
@@ -81,14 +81,14 @@ class MovieAdminController extends Controller
             'poster'          => 'nullable|image|mimes:jpg,png,jpeg|max:5048',
         ]);
 
-        // 📸 Si suben una nueva imagen reemplazar
+        // 📸 Reemplazar imagen si suben una nueva
         if ($request->hasFile('poster')) {
             $extension = $request->poster->getClientOriginalExtension();
             $nombre = Str::random(40) . '.' . $extension;
 
             $request->poster->storeAs('public/images/peliculas', $nombre);
 
-            $validated['image'] = "images/peliculas/" . $nombre;
+            $validated['poster'] = "images/peliculas/" . $nombre;
         }
 
         $movie->update($validated);
@@ -106,6 +106,7 @@ class MovieAdminController extends Controller
             ->with('success', '❌ Película eliminada correctamente');
     }
 }
+
 
 
 

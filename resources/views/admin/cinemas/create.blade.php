@@ -1,4 +1,5 @@
-@extends('layouts.admin') {{-- Usa el layout del panel de admin --}}
+@extends('admin.layout')
+
 
 @section('content')
 

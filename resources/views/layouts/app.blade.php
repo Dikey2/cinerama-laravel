@@ -15,7 +15,7 @@
     @include('layouts.navigation-cinerama')
 
     <!-- Contenido principal SIN ESPACIO ARRIBA -->
-    <main class="min-h-screen">
+    <main class="pt-20 min-h-0">
         @yield('content')
     </main>
 
@@ -24,5 +24,6 @@
 
 </body>
 </html>
+
 
 

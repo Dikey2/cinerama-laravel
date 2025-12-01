@@ -162,7 +162,7 @@ Route::middleware(['auth', 'admin'])
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
         // Usuarios
-        Route::resource('users', UserAdminController::class)->only(['index']);
+        Route::resource('users', UserAdminController::class)->except(['show']);
 
         // Películas
         Route::resource('movies', MovieAdminController::class);
@@ -179,13 +179,13 @@ Route::middleware(['auth', 'admin'])
         // Funciones
         Route::resource('showtimes', ShowtimeAdminController::class)->except(['show']);
 
-        // Asientos Admin
+        // Asientos
         Route::get('showtimes/{showtime}/asientos', [SeatController::class, 'adminIndex'])
             ->name('showtimes.asientos');
 
-            
-
-
+        // Configuración
+        Route::view('/config', 'admin.config.index')->name('config');
+ 
     });
 
 
@@ -206,6 +206,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+
+
 });
 
 

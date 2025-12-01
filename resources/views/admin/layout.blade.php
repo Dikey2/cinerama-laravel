@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Panel Admin') - Cinerama</title>
 
-    {{-- ✅ Carga Breeze + App.js (axios + Alpine) --}}
+    {{-- CSS + JS --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
@@ -48,7 +48,7 @@
     {{-- ⭐ SIDEBAR --}}
     <aside class="admin-sidebar">
         <div class="text-xl font-bold mb-6">
-            <img src="{{ asset('images/logo-cinerama.png') }}" class="h-8 mb-2" alt="">
+            <img src="{{ asset('images/logo-cinerama.png') }}" class="h-20 mb-2" alt="">
             <span>Cinerama</span>
             <div class="text-xs text-gray-500 -mt-1">Panel de administración</div>
         </div>
@@ -65,10 +65,11 @@
                 🎬 Películas
             </a>
 
-            <a href="{{ route('admin.cinemas.index') }}"
-               class="{{ request()->is('admin/cinemas*') ? 'text-yellow-600 font-semibold' : 'text-gray-700' }} flex items-center gap-2">
+            <a href="{{ route('admin.cinemas.create') }}"
+            class="{{ request()->is('admin/cinemas/create') ? 'text-yellow-600 font-semibold' : 'text-gray-700' }} flex items-center gap-2">
                 🎦 Cines
             </a>
+
 
             <a href="{{ route('admin.promociones.index') }}"
                class="{{ request()->is('admin/promociones*') ? 'text-yellow-600 font-semibold' : 'text-gray-700' }} flex items-center gap-2">
@@ -77,17 +78,20 @@
 
             <a href="{{ route('admin.candies.index') }}"
                class="{{ request()->is('admin/candies*') ? 'text-yellow-600 font-semibold' : 'text-gray-700' }} flex items-center gap-2">
-                🍿 Dulcería
+                🍬 Dulcería
             </a>
 
-            <a href="#" class="text-gray-700 flex items-center gap-2">
+            <a href="{{ route('admin.users.index') }}"
+               class="{{ request()->is('admin/users*') ? 'text-yellow-600 font-semibold' : 'text-gray-700' }} flex items-center gap-2">
                 👤 Usuarios
             </a>
 
-            <a href="#" class="text-gray-700 flex items-center gap-2">
+            <a href="{{ route('admin.config') }}"
+               class="{{ request()->routeIs('admin.config') ? 'text-yellow-600 font-semibold' : 'text-gray-700' }} flex items-center gap-2">
                 ⚙️ Configuración
             </a>
-        </nav>
+
+        </nav> {{-- ← ESTA LÍNEA FALTABA --}}
     </aside>
 
     {{-- ⭐ ÁREA PRINCIPAL --}}
@@ -123,5 +127,6 @@
 
 </body>
 </html>
+
 
 

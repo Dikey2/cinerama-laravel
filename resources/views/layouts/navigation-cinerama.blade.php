@@ -4,7 +4,7 @@
         {{-- LOGO --}}
         <div class="flex items-center space-x-3">
             <a href="/">
-                <img src="{{ asset('images/logo-cinerama.png') }}" class="h-12" alt="Cinerama">
+                <img src="{{ asset('images/logo-cinerama.png') }}" class="h-20  alt="Cinerama">
             </a>
         </div>
 

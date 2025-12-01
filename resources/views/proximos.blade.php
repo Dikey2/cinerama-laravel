@@ -17,7 +17,7 @@
                     <a href="https://youtu.be/eRQyHKtHLcg" 
                        target="_blank"
                        class="bg-yellow-400 text-black font-bold px-6 py-3 rounded-full hover:bg-yellow-300 transition">
-                        🎬 Ver tráiler
+                         Ver tráiler
                     </a>
                 </div>
             </div>
@@ -33,7 +33,7 @@
                     <a href="https://youtu.be/g71Ha1HCWt8" 
                        target="_blank"
                        class="bg-yellow-400 text-black font-bold px-6 py-3 rounded-full hover:bg-yellow-300 transition">
-                        🎬 Ver tráiler
+                         Ver tráiler
                     </a>
                 </div>
             </div>
@@ -49,7 +49,7 @@
                     <a href="https://www.youtube.com/watch?v=LJraZRHhFwQ" 
                        target="_blank"
                        class="bg-yellow-400 text-black font-bold px-6 py-3 rounded-full hover:bg-yellow-300 transition">
-                        🎬 Ver tráiler
+                         Ver tráiler
                     </a>
                 </div>
             </div>
@@ -66,7 +66,7 @@
 
     <!-- 🔸 TÍTULO DE SECCIÓN -->
     <div class="text-center mt-16 mb-8">
-        <h2 class="text-3xl font-bold text-yellow-400">🎥 Próximos Estrenos</h2>
+        <h2 class="text-3xl font-bold text-yellow-400"> Próximos Estrenos</h2>
         <p class="text-gray-400 mt-2">¡No te pierdas las películas que están por llegar a Cinerama!</p>
     </div>
 
@@ -86,7 +86,7 @@
                 <a href="{{ $pelicula['trailer'] }}" 
                    target="_blank" 
                    class="bg-yellow-400 text-black px-4 py-2 rounded-full font-semibold hover:bg-yellow-300 transition">
-                    🎬 Ver tráiler
+                     Ver tráiler
                 </a>
             </div>
         </div>

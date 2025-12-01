@@ -7,7 +7,7 @@
 
     <!-- 🏷️ Título -->
     <div class="max-w-6xl mx-auto mb-10 px-4">
-        <h1 class="text-4xl font-extrabold text-yellow-400 mb-3">🎬 Películas</h1>
+        <h1 class="text-4xl font-extrabold text-yellow-400 mb-3"> Películas</h1>
         <div class="flex space-x-8 text-sm border-b border-gray-700 pb-2">
             <button @click="tab = 'cartelera'" 
                 :class="tab === 'cartelera' 
@@ -27,7 +27,7 @@
             x-data="{ openCity: true, openGenre: true }">
 
             <h3 class="text-xl font-bold text-yellow-400 mb-4 flex items-center gap-2">
-                🎯 Filtrar por:
+                 Filtrar por:
             </h3>
 
             <!-- Ciudad -->
